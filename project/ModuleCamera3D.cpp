@@ -1,0 +1,242 @@
+#include "Globals.h"
+#include "Application.h"
+#include "PhysBody3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePlayer.h"
+#include "PhysVehicle3D.h"
+
+
+#define CAR App->player->vehicle
+
+ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+{
+	CalculateViewMatrix();
+
+	X = vec3(1.0f, 0.0f, 0.0f);
+	Y = vec3(0.0f, 1.0f, 0.0f);
+	Z = vec3(0.0f, 0.0f, 1.0f);
+
+	InitialPosition = vec3(0, 0, 0);
+	delta_from_car = vec3(0, 3, -8);
+	//delta_from_car = vec3(0,3,5); //First person this?
+	
+	Position = vec3(InitialPosition.x,InitialPosition.y, InitialPosition.z);
+																				
+	Reference = vec3(0.0f, 0.0f,0.0f);
+
+}
+
+ModuleCamera3D::~ModuleCamera3D()
+{}
+
+// -----------------------------------------------------------------
+bool ModuleCamera3D::Start()
+{
+	LOG("Setting up the camera");
+	bool ret = true;
+	manual_mode = false;
+
+	return ret;
+}
+
+// -----------------------------------------------------------------
+bool ModuleCamera3D::CleanUp()
+{
+	LOG("Cleaning camera");
+
+	return true;
+}
+
+// -----------------------------------------------------------------
+update_status ModuleCamera3D::Update(float dt)
+{
+	if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) { manual_mode = !manual_mode; }
+
+	if (manual_mode) {
+
+		// Implement a debug camera with keys and mouse
+		// Now we can make this movememnt frame rate independant!
+
+		vec3 newPos(0, 0, 0);
+		float speed = 3.0f * dt;
+		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+			speed = 8.0f * dt;
+
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
+
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
+
+
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+
+		Position += newPos;
+		Reference += newPos;
+
+		// Mouse motion ----------------
+
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+		{
+			int dx = -App->input->GetMouseXMotion();
+			int dy = -App->input->GetMouseYMotion();
+
+			float Sensitivity = 0.25f;
+
+			Position -= Reference;
+
+			if (dx != 0)
+			{
+				float DeltaX = (float)dx * Sensitivity;
+
+				X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+				Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+				Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			}
+
+			if (dy != 0)
+			{
+				float DeltaY = (float)dy * Sensitivity;
+
+				Y = rotate(Y, DeltaY, X);
+				Z = rotate(Z, DeltaY, X);
+
+				if (Y.y < 0.0f)
+				{
+					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+					Y = cross(Z, X);
+				}
+			}
+
+			Position = Reference + Z * length(Position);
+		}
+	}
+	else {
+		mat4x4 CarQuaternion;
+		CAR->GetTransform(&CarQuaternion);
+		vec3 car_pos = Get_Position_From_Quat(CarQuaternion);
+		vec3 car_forward = CAR->GetForward();
+
+		mat3x3 rotation(CarQuaternion);
+		vec3 newPos = car_pos + rotation * delta_from_car;
+
+		btVector3 LookAtMe = Cam_Lerp(Position, newPos,0.15);
+		Position = { LookAtMe.x(), LookAtMe.y(), LookAtMe.z() }; //because vec3 = btVec3 would be too fucking easy wouldn't it, Bullet? I'm not even gonna create the overloaded operator. Fuck it
+		LookAt(car_pos + vec3(0,delta_from_car.y,0));
+
+
+	}
+	// Recalculate matrix -------------
+	CalculateViewMatrix();
+
+	return UPDATE_CONTINUE;
+}
+
+// -----------------------------------------------------------------
+void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
+{
+	this->Position = Position;
+	this->Reference = Reference;
+
+	Z = normalize(Position - Reference);
+	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
+	Y = cross(Z, X);
+
+	if(!RotateAroundReference)
+	{
+		this->Reference = this->Position;
+		this->Position += Z * 0.05f;
+	}
+
+	CalculateViewMatrix();
+}
+
+// -----------------------------------------------------------------
+void ModuleCamera3D::LookAt( const vec3 &Spot)
+{
+	Reference = Spot;
+
+	Z = normalize(Position - Reference);
+	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
+	Y = cross(Z, X);
+
+	CalculateViewMatrix();
+}
+
+
+// -----------------------------------------------------------------
+void ModuleCamera3D::Move(const vec3 &Movement)
+{
+	Position += Movement;
+	Reference += Movement;
+
+	CalculateViewMatrix();
+}
+
+// -----------------------------------------------------------------
+float* ModuleCamera3D::GetViewMatrix()
+{
+	return &ViewMatrix;
+}
+
+// -----------------------------------------------------------------
+void ModuleCamera3D::CalculateViewMatrix()
+{
+	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
+	ViewMatrixInverse = inverse(ViewMatrix);
+}
+
+btVector3 ModuleCamera3D::Cam_Lerp(vec3 origin, vec3 destiny, float lerp)
+{
+	btVector3 ret;
+	ret.setX((1 - lerp)*origin.x + lerp * destiny.x);
+	ret.setY((1 - lerp)*origin.y + lerp * destiny.y);
+	ret.setZ((1 - lerp)*origin.z + lerp * destiny.z);
+	//fancy reformulation of lerp, so it works in case lerp = 1
+
+	return ret;
+}
+
+vec3 ModuleCamera3D::RotateVec3(vec3 vec, mat3x3 rot)
+{
+	vec3 rot_vec;
+	rot_vec.x = vec.x*rot.M[0] + vec.y*rot.M[3] + vec.z*rot.M[6];
+	rot_vec.y = vec.x*rot.M[1] + vec.y*rot.M[4] + vec.z*rot.M[7];
+	rot_vec.z = vec.x*rot.M[2] + vec.y*rot.M[5] + vec.z*rot.M[8];
+	
+	return rot_vec;
+}
+
+mat3x3 ModuleCamera3D::Get_Rotation_From_Quat(mat4x4 quat)
+{
+	mat3x3 rot;
+	rot.M[0] = quat.M[0];
+	rot.M[1] = quat.M[1];
+	rot.M[2] = quat.M[2];
+	rot.M[3] = quat.M[4];
+	rot.M[4] = quat.M[5];
+	rot.M[5] = quat.M[6];
+	rot.M[6] = quat.M[8];
+	rot.M[7] = quat.M[9];
+	rot.M[8] = quat.M[10];
+	
+	return rot;
+}
+
+vec3 ModuleCamera3D::Get_Position_From_Quat(mat4x4 quat)
+{
+	vec3 pos;
+	pos.x = quat.M[12];
+	pos.y = quat.M[13];
+	pos.z = quat.M[14];
+	return pos;
+}
+
+float ModuleCamera3D::Get_Scale_From_Quat(mat4x4 quat)
+{
+	return quat.M[15];
+}
+
+
+
