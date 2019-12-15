@@ -30,13 +30,15 @@ public:
 	
 	vec3 X, Y, Z, Position, Reference;
 	vec3 InitialPosition;
-	vec3 delta_from_car; //distance from the car to the camera pos
+	
 
 private:
-
 	mat4x4 ViewMatrix, ViewMatrixInverse;
-	bool manual_mode;
 
+	enum class Camera_Modes {MANUAL, FP, FOLLOW, CAM_ERROR};
+	Camera_Modes Cam_status;
+	vec3 delta_from_car; //distance from the car to the camera pos
+	vec3 FP_vec; //point from the chais to camera position in fisrt person view mode
 
 	//We kinda need this. Just for the memes.
 	vec3 RotateVec3(vec3 vec, mat3x3 rot);

@@ -1,12 +1,13 @@
 #include "Globals.h"
 #include "Application.h"
 #include "PhysBody3D.h"
+#include "ModuleInput.h"
 #include "ModuleCamera3D.h"
 #include "ModulePlayer.h"
 #include "PhysVehicle3D.h"
 
 
-#define CAR App->player->vehicle
+#define CAR App->player->vehicle 
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -17,12 +18,15 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
 	InitialPosition = vec3(0, 0, 0);
-	delta_from_car = vec3(0, 3, -8);
-	//delta_from_car = vec3(0,3,5); //First person this?
+	delta_from_car = vec3(0, 5, -8);
+	FP_vec = vec3(0, 3, 4);
+	
 	
 	Position = vec3(InitialPosition.x,InitialPosition.y, InitialPosition.z);
 																				
 	Reference = vec3(0.0f, 0.0f,0.0f);
+
+
 
 }
 
@@ -34,7 +38,7 @@ bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
-	manual_mode = false;
+	Cam_status = Camera_Modes::FOLLOW;
 
 	return ret;
 }
@@ -50,11 +54,32 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) { manual_mode = !manual_mode; }
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) { 
+		Cam_status = Camera_Modes::FOLLOW; }
+	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) { 
+		Cam_status = Camera_Modes::FP; }
+	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) { 
+		Cam_status = Camera_Modes::MANUAL; }
+	
+	switch (Cam_status) {
+	case Camera_Modes::FOLLOW:
+	{
+		mat4x4 CarQuaternion;
+		CAR->GetTransform(&CarQuaternion);
+		vec3 car_pos = Get_Position_From_Quat(CarQuaternion);
+		vec3 car_forward = CAR->GetForward();
 
-	if (manual_mode) {
+		mat3x3 rotation(CarQuaternion);
+		vec3 newPos = car_pos + rotation * delta_from_car;
 
-		// Implement a debug camera with keys and mouse
+		btVector3 LookAtMe = Cam_Lerp(Position, newPos, 0.15);
+		Position = { LookAtMe.x(), LookAtMe.y(), LookAtMe.z() }; //because vec3 = btVec3 would be too fucking easy wouldn't it, Bullet? I'm not even gonna create the overloaded operator. Fuck it
+		LookAt(car_pos + vec3(0, delta_from_car.y, 0));
+
+	}
+		break;
+	case Camera_Modes::MANUAL:
+	{// Implement a debug camera with keys and mouse
 		// Now we can make this movememnt frame rate independant!
 
 		vec3 newPos(0, 0, 0);
@@ -112,21 +137,26 @@ update_status ModuleCamera3D::Update(float dt)
 			Position = Reference + Z * length(Position);
 		}
 	}
-	else {
+		break;
+	case Camera_Modes::FP:
+	{
 		mat4x4 CarQuaternion;
 		CAR->GetTransform(&CarQuaternion);
 		vec3 car_pos = Get_Position_From_Quat(CarQuaternion);
 		vec3 car_forward = CAR->GetForward();
 
 		mat3x3 rotation(CarQuaternion);
-		vec3 newPos = car_pos + rotation * delta_from_car;
+		vec3 newPos = car_pos + rotation * FP_vec;
 
-		btVector3 LookAtMe = Cam_Lerp(Position, newPos,0.15);
+		btVector3 LookAtMe = Cam_Lerp(Position, newPos, 1); //First person with lerp is a fucking visual nightmare. Lerp = 1
 		Position = { LookAtMe.x(), LookAtMe.y(), LookAtMe.z() }; //because vec3 = btVec3 would be too fucking easy wouldn't it, Bullet? I'm not even gonna create the overloaded operator. Fuck it
-		LookAt(car_pos + vec3(0,delta_from_car.y,0));
-
-
+		LookAt(car_pos + rotation * vec3(0, FP_vec.y, FP_vec.z));
 	}
+		break;
+	default:
+		LOG("Cam error");
+	}
+
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
