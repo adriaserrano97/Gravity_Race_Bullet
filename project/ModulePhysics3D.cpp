@@ -154,7 +154,10 @@ update_status ModulePhysics3D::Update(float dt)
 
 		if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 		{
-			world->setGravity(btVector3(0.0f, 10.0f, 0.0f));
+			btVector3 aux_grav = world->getGravity();
+			aux_grav.setY(-1 * aux_grav.getY());
+			world->setGravity(aux_grav);
+			
 		}
 	}
 
