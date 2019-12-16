@@ -20,6 +20,15 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+	Cube* littlepad = new Cube(1, 0.15f, 1);
+
+	littlepad->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
+	littlepad->SetPos(0, 5, 0);
+
+	primitives.PushBack(littlepad);
+
+	littlepad->body = App->physics->AddBody(*littlepad, 1);
+
 	return ret;
 }
 
@@ -37,6 +46,25 @@ update_status ModuleSceneIntro::Update(float dt)
 	Plane p(0, 1, 0, 0);
 	p.axis = true;
 	p.Render();
+
+	for (uint n = 0; n < primitives.Count(); n++)
+	{
+		if (primitives[n]->body != nullptr)
+		{
+			primitives[n]->Update();
+		}
+	
+	}
+	return UPDATE_CONTINUE;
+}
+
+
+update_status ModuleSceneIntro::PostUpdate(float dt)
+{
+	for (uint n = 0; n < primitives.Count(); n++)
+	{
+		primitives[n]->Render();
+	}
 
 	return UPDATE_CONTINUE;
 }

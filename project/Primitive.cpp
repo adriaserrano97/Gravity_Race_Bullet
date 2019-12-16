@@ -4,6 +4,7 @@
 #include <gl/GLU.h>
 #include "Primitive.h"
 #include "glut/glut.h"
+#include "PhysBody3D.h"
 
 #pragma comment (lib, "glut/glut32.lib")
 
@@ -11,11 +12,19 @@
 Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
 {}
 
+
 // ------------------------------------------------------------
 PrimitiveTypes Primitive::GetType() const
 {
 	return type;
 }
+
+
+void Primitive::Update()
+{
+	body->GetTransform(&transform);
+}
+
 
 // ------------------------------------------------------------
 void Primitive::Render() const
@@ -67,6 +76,7 @@ void Primitive::Render() const
 	glPopMatrix();
 }
 
+
 // ------------------------------------------------------------
 void Primitive::InnerRender() const
 {
@@ -81,11 +91,13 @@ void Primitive::InnerRender() const
 	glPointSize(1.0f);
 }
 
+
 // ------------------------------------------------------------
 void Primitive::SetPos(float x, float y, float z)
 {
 	transform.translate(x, y, z);
 }
+
 
 // ------------------------------------------------------------
 void Primitive::SetRotation(float angle, const vec3 &u)
@@ -93,11 +105,13 @@ void Primitive::SetRotation(float angle, const vec3 &u)
 	transform.rotate(angle, u);
 }
 
+
 // ------------------------------------------------------------
 void Primitive::Scale(float x, float y, float z)
 {
 	transform.scale(x, y, z);
 }
+
 
 // CUBE ============================================
 Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
@@ -105,10 +119,12 @@ Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
+
 Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
+
 
 void Cube::InnerRender() const
 {	
@@ -157,16 +173,19 @@ void Cube::InnerRender() const
 	glEnd();
 }
 
+
 // SPHERE ============================================
 Sphere::Sphere() : Primitive(), radius(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
+
 Sphere::Sphere(float radius) : Primitive(), radius(radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
+
 
 void Sphere::InnerRender() const
 {
@@ -180,10 +199,12 @@ Cylinder::Cylinder() : Primitive(), radius(1.0f), height(1.0f)
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
+
 Cylinder::Cylinder(float radius, float height) : Primitive(), radius(radius), height(height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
+
 
 void Cylinder::InnerRender() const
 {
@@ -221,16 +242,19 @@ void Cylinder::InnerRender() const
 	glEnd();
 }
 
+
 // LINE ==================================================
 Line::Line() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
 {
 	type = PrimitiveTypes::Primitive_Line;
 }
 
+
 Line::Line(float x, float y, float z) : Primitive(), origin(0, 0, 0), destination(x, y, z)
 {
 	type = PrimitiveTypes::Primitive_Line;
 }
+
 
 void Line::InnerRender() const
 {
