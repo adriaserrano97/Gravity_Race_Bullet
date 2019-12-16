@@ -21,7 +21,7 @@ void PhysBody3D::Push(float x, float y, float z)
 // ---------------------------------------------------------
 void PhysBody3D::GetTransform(float* matrix) const
 {
-	if(body != NULL && matrix != NULL)
+	if(body != nullptr && matrix != NULL)
 	{
 		body->getWorldTransform().getOpenGLMatrix(matrix);
 	}
