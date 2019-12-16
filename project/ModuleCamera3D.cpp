@@ -69,10 +69,13 @@ update_status ModuleCamera3D::Update(float dt)
 		vec3 car_pos = CAR->Get_Position_From_Quat(CarQuaternion);
 		vec3 car_forward = CAR->GetForward();
 
+
+		
+
 		mat3x3 rotation(CarQuaternion);
 		vec3 newPos = car_pos + rotation * delta_from_car;
 
-		btVector3 LookAtMe = Cam_Lerp(Position, newPos, 0.15);
+		btVector3 LookAtMe = Cam_Lerp(Position, newPos, 0.17);
 		Position = { LookAtMe.x(), LookAtMe.y(), LookAtMe.z() }; //because vec3 = btVec3 would be too fucking easy wouldn't it, Bullet? I'm not even gonna create the overloaded operator. Fuck it
 		LookAt(car_pos + vec3(0, delta_from_car.y, 0));
 
@@ -237,6 +240,7 @@ vec3 ModuleCamera3D::RotateVec3(vec3 vec, mat3x3 rot)
 	
 	return rot_vec;
 }
+
 
 
 

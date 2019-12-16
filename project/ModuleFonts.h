@@ -31,6 +31,7 @@ public:
 	~ModuleFonts();
 
 	bool Start();
+	bool CleanUp();
 	// Load Font
 	int Load(const char* texture_path, const char* characters, uint rows = 1);
 	void UnLoad(int font_id);
@@ -45,7 +46,7 @@ public:
 
 public:
 	
-
+	int typo_1; //Unload all typos in Cleanup
 	Font fonts[MAX_FONTS];
 	SDL_Texture* textures[MAX_TEXTURES];
 };
