@@ -30,17 +30,17 @@ bool ModuleSceneIntro::Start()
 	
 	
 	
-	/*
-	Cube* littlepad = new Cube(1, 0.15f, 1);
+	
+	Cube* littlepad = new Cube(2500, 1, 2500);
 
 	littlepad->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
-	littlepad->SetPos(0, 10, 0);
+	littlepad->SetPos(0, 15, 0);
 
 
 	primitives.PushBack(littlepad);
 
-	littlepad->body = App->physics->AddBody(*littlepad, 1);
-	*/
+	littlepad->body = App->physics->AddBody(*littlepad, 0);
+	
 	return ret;
 }
 
