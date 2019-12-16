@@ -54,11 +54,11 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) { 
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) { //IMPLEMENTED
 		Cam_status = Camera_Modes::FOLLOW; }
-	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) { 
+	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) { //NOT IMPLEMENTED
 		Cam_status = Camera_Modes::FP; }
-	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) { 
+	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) { //IMPLEMENTED
 		Cam_status = Camera_Modes::MANUAL; }
 	
 	switch (Cam_status) {
