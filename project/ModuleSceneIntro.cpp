@@ -20,14 +20,14 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	Cube* littlepad = new Cube(1, 0.15f, 1);
+	Cube* littlepad = new Cube(250, 0.15f, 250);
 
 	littlepad->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
-	littlepad->SetPos(0, 5, 0);
+	littlepad->SetPos(0, 10, 0);
 
 	primitives.PushBack(littlepad);
 
-	littlepad->body = App->physics->AddBody(*littlepad, 1);
+	littlepad->body = App->physics->AddBody(*littlepad, 0);
 
 	return ret;
 }

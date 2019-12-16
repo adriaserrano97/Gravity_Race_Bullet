@@ -66,7 +66,7 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		mat4x4 CarQuaternion;
 		CAR->GetTransform(&CarQuaternion);
-		vec3 car_pos = Get_Position_From_Quat(CarQuaternion);
+		vec3 car_pos = CAR->Get_Position_From_Quat(CarQuaternion);
 		vec3 car_forward = CAR->GetForward();
 
 		mat3x3 rotation(CarQuaternion);
@@ -142,7 +142,7 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		mat4x4 CarQuaternion;
 		CAR->GetTransform(&CarQuaternion);
-		vec3 car_pos = Get_Position_From_Quat(CarQuaternion);
+		vec3 car_pos = CAR->Get_Position_From_Quat(CarQuaternion);
 		vec3 car_forward = CAR->GetForward();
 
 		mat3x3 rotation(CarQuaternion);
@@ -238,35 +238,7 @@ vec3 ModuleCamera3D::RotateVec3(vec3 vec, mat3x3 rot)
 	return rot_vec;
 }
 
-mat3x3 ModuleCamera3D::Get_Rotation_From_Quat(mat4x4 quat)
-{
-	mat3x3 rot;
-	rot.M[0] = quat.M[0];
-	rot.M[1] = quat.M[1];
-	rot.M[2] = quat.M[2];
-	rot.M[3] = quat.M[4];
-	rot.M[4] = quat.M[5];
-	rot.M[5] = quat.M[6];
-	rot.M[6] = quat.M[8];
-	rot.M[7] = quat.M[9];
-	rot.M[8] = quat.M[10];
-	
-	return rot;
-}
 
-vec3 ModuleCamera3D::Get_Position_From_Quat(mat4x4 quat)
-{
-	vec3 pos;
-	pos.x = quat.M[12];
-	pos.y = quat.M[13];
-	pos.z = quat.M[14];
-	return pos;
-}
-
-float ModuleCamera3D::Get_Scale_From_Quat(mat4x4 quat)
-{
-	return quat.M[15];
-}
 
 
 

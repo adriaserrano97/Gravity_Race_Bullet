@@ -1,5 +1,5 @@
 #include "PhysBody3D.h"
-#include "glmath.h"
+
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
 // =================================================
@@ -67,4 +67,53 @@ mat3x3 PhysBody3D::GetRotation()
 
 	mat3x3 rotation(transform);
 	return rotation;
+}
+
+
+mat3x3 PhysBody3D::Get_Rotation_From_Quat(mat4x4 &quat) const
+{
+	mat3x3 rot;
+	rot.M[0] = quat.M[0];
+	rot.M[1] = quat.M[1];
+	rot.M[2] = quat.M[2];
+	rot.M[3] = quat.M[4];
+	rot.M[4] = quat.M[5];
+	rot.M[5] = quat.M[6];
+	rot.M[6] = quat.M[8];
+	rot.M[7] = quat.M[9];
+	rot.M[8] = quat.M[10];
+
+	return rot;
+}
+
+
+vec3 PhysBody3D::Get_Position_From_Quat(mat4x4 &quat) const
+{
+	vec3 pos;
+	pos.x = quat.M[12];
+	pos.y = quat.M[13];
+	pos.z = quat.M[14];
+	return pos;
+}
+
+
+float PhysBody3D::Get_Scale_From_Quat(mat4x4 &quat) const
+{
+	return quat.M[15];
+}
+
+
+void PhysBody3D::Copy_Only_Rotation(mat4x4 &from_this, mat4x4 &to_this)
+{
+	to_this[0] = from_this[0];
+	to_this[1] = from_this[1];
+	to_this[2] = from_this[2];
+
+	to_this[4] = from_this[4];
+	to_this[5] = from_this[5];
+	to_this[6] = from_this[6];
+
+	to_this[8] = from_this[8];
+	to_this[9] = from_this[9];
+	to_this[10] = from_this[10];
 }

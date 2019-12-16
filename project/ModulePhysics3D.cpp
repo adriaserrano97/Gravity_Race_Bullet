@@ -66,23 +66,6 @@ bool ModulePhysics3D::Start()
 		world->addRigidBody(body);
 	}
 
-	/*
-	{
-		btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
-
-		btDefaultMotionState* myMotionState = new btDefaultMotionState();
-		
-		btTransform* transform = new btTransform(btQuaternion(0,-1,0,0), btVector3(0, 5, 0));
-		myMotionState->setWorldTransform(*transform);
-		
-
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
-
-		btRigidBody* body = new btRigidBody(rbInfo);
-
-		world->addRigidBody(body);
-	}
-	*/
 	return true;
 }
 
@@ -158,7 +141,40 @@ update_status ModulePhysics3D::Update(float dt)
 			aux_grav.setY(-1 * aux_grav.getY());
 			world->setGravity(aux_grav);
 			
+			mat4x4* rotation = new mat4x4(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+			mat4x4* player_aux = new mat4x4();
+			App->player->vehicle->GetTransform(&player_aux[0][0]);
+
+			App->player->vehicle->Copy_Only_Rotation(*rotation, *player_aux);
+			
+			vec3 vehicle_pos = App->player->vehicle->Get_Position_From_Quat(*player_aux);
+
+			App->player->vehicle->SetTransform(&player_aux[0][0]);
+
+			App->player->vehicle->SetPos(vehicle_pos.x, vehicle_pos.y + 1.5, vehicle_pos.z);
+			
 		}
+
+		if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+		{
+			btVector3 aux_grav = world->getGravity();
+			aux_grav.setY(-1 * aux_grav.getY());
+			world->setGravity(aux_grav);
+
+			mat4x4* rotation = new mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+			mat4x4* player_aux = new mat4x4();
+			App->player->vehicle->GetTransform(&player_aux[0][0]);
+
+			App->player->vehicle->Copy_Only_Rotation(*rotation, *player_aux);
+
+			vec3 vehicle_pos = App->player->vehicle->Get_Position_From_Quat(*player_aux);
+
+			App->player->vehicle->SetTransform(&player_aux[0][0]);
+
+			App->player->vehicle->SetPos(vehicle_pos.x, vehicle_pos.y - 1.5, vehicle_pos.z);
+		}
+
+	
 	}
 
 	return UPDATE_CONTINUE;

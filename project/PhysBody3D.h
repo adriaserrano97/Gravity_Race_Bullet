@@ -2,6 +2,7 @@
 #define __PhysBody3D_H__
 
 #include "p2List.h"
+#include "glmath.h"
 
 class btRigidBody;
 class Module;
@@ -19,9 +20,13 @@ public:
 	void GetTransform(float* matrix) const;
 	void SetTransform(const float* matrix) const;
 	void SetPos(float x, float y, float z);
-	vec3 PhysBody3D::GetForward();
-	mat3x3 PhysBody3D::GetRotation();
+	vec3 GetForward();
+	mat3x3 GetRotation();
 
+	mat3x3 Get_Rotation_From_Quat(mat4x4 &quat) const;
+	vec3 Get_Position_From_Quat(mat4x4 &quat) const;
+	float Get_Scale_From_Quat(mat4x4 &quat) const;
+	void Copy_Only_Rotation(mat4x4 &from_this, mat4x4 &to_this) ;
 
 private:
 	btRigidBody* body = nullptr;
