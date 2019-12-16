@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleFonts.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -105,6 +106,7 @@ bool ModuleRenderer3D::Init()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -116,14 +118,18 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
-
+	
 	return UPDATE_CONTINUE;
 }
 
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	
 	SDL_GL_SwapWindow(App->window->window);
+	
+	//App->fonts->BlitText(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, App->fonts->typo_1, "VICTORY YEEEEEEEEEET");
+	
 	return UPDATE_CONTINUE;
 }
 

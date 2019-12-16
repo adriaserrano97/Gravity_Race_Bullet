@@ -69,6 +69,9 @@ update_status ModuleCamera3D::Update(float dt)
 		vec3 car_pos = Get_Position_From_Quat(CarQuaternion);
 		vec3 car_forward = CAR->GetForward();
 
+
+		
+
 		mat3x3 rotation(CarQuaternion);
 		vec3 newPos = car_pos + rotation * delta_from_car;
 
@@ -267,6 +270,7 @@ float ModuleCamera3D::Get_Scale_From_Quat(mat4x4 quat)
 {
 	return quat.M[15];
 }
+
 
 
 

@@ -7,7 +7,7 @@
 #include "SDL/include/SDL.h"
 #include "SDL/include/SDL_surface.h"
 #include "SDL_image/include/SDL_image.h"
-#pragma comment( lib, "SDL_image/libx86/SDL2_image.lib") //this makes IMG_Load work
+#pragma comment( lib, "SDL_image/libx86/SDL2_image.lib") 
 
 
 // Constructor
@@ -20,7 +20,42 @@ ModuleFonts::~ModuleFonts()
 
 bool ModuleFonts::Start()
 {
+	bool ret = true;
+
+	for (uint i = 0; i < MAX_TEXTURES; ++i) {
+		textures[i] = nullptr;
+	}
+
+
+	int flags = IMG_INIT_PNG;
+	int init = IMG_Init(flags);
+	if ((init & flags) != flags)
+	{
+		LOG("Could not initialize Image lib. IMG_Init: %s", IMG_GetError());
+		ret = false;
+	}
+	
 	renderer2D = SDL_CreateRenderer(App->window->window, -1, 0); //we'll use it to render fonts in out 3D world
+
+	typo_1 = Load("assets/font1.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~'!@#$%^&*()-_+=[]{}| :;¨º<>,./?", 1);
+
+
+	return ret;
+}
+
+bool ModuleFonts::CleanUp()
+{
+	LOG("Freeing textures and Image library");
+
+	for (uint i = 0; i < MAX_TEXTURES; ++i) {
+		if (textures[i] != nullptr) {
+			SDL_DestroyTexture(textures[i]);
+		}
+	}
+	if (typo_1 != -1) {
+		UnLoad(typo_1);
+	}
+	IMG_Quit();
 	return true;
 }
 
@@ -128,6 +163,7 @@ SDL_Texture* const ModuleFonts::LoadTexture(const char* path)
 	if (surface == NULL)
 	{
 		LOG("Could not load surface with path: %s. IMG_Load: %s", path, IMG_GetError());
+		LOG("Sadness");
 	}
 	else
 	{
@@ -184,8 +220,8 @@ bool ModuleFonts::Blit(SDL_Texture * texture, int x, int y, SDL_Rect * section, 
 {
 	bool ret = true;
 	SDL_Rect rect;
-	rect.x = x;//(int)((camera.x + camera_offset.x) * speed) + x * SCREEN_SIZE;
-	rect.y = y;//(int)((camera.y + camera_offset.y) * speed) + y * SCREEN_SIZE;
+	rect.x = x/*(int)((camera.x + camera_offset.x) * speed) +x */  * SCREEN_SIZE;
+	rect.y = y/*(int)((camera.y + camera_offset.y) * speed) + y*/ * SCREEN_SIZE;
 
 	if (section != NULL)
 	{
