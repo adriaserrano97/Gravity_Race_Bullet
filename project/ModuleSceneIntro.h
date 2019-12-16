@@ -22,6 +22,9 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+private:
+	void Add_Linear_Map(int number, vec3 separation, float gap = 10); // separation is the vec that exists between pillars. {3,0,3} will make a diagonal line with 3 meters between pillars
+
 public:
 	/*
 	PhysBody3D* pb_snake[MAX_SNAKE];
@@ -44,4 +47,7 @@ public:
 	PhysMotor3D* right_wheel;
 
 	p2DynArray<Primitive*> primitives;
+
+private:
+	vec3 reference_vec; //we'll use this to create the map. It's gonna be fucking awesome.
 };
