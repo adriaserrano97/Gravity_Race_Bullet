@@ -39,8 +39,8 @@ bool ModuleSceneIntro::Start()
 
 	Add_Linear_Map(5, vec3(0,0,10), 10.f);
 	Add_Circular_Map(30, vec3(85,0,0),20.f,0.1);
-	/*
-	Cube* littlepad = new Cube(1, 0.15f, 1);
+	
+	
 
 	littlepad->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
 	littlepad->SetPos(0, 15, 0);
