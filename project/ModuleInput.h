@@ -12,6 +12,26 @@ enum KEY_STATE
 	KEY_UP
 };
 
+
+struct Gamepad
+{
+	bool up = false;
+	bool down = false;
+	bool left = false;
+	bool right = false;
+
+	bool a = false;
+	bool b = false;
+	bool x = false;
+	bool y = false;
+	bool R1 = false;
+	bool L1 = false;
+	bool R2 = false;
+	bool L2 = false;
+	bool start = false;
+};
+
+
 class ModuleInput : public Module
 {
 public:
@@ -57,6 +77,14 @@ public:
 	{
 		return mouse_y_motion;
 	}
+
+
+public:
+	Uint8 gameController1States[SDL_CONTROLLER_BUTTON_MAX];
+	float gameController1AxisValues[SDL_CONTROLLER_AXIS_MAX];
+	SDL_GameController* gameController1;
+	Gamepad pad;
+
 
 private:
 	KEY_STATE* keyboard;
