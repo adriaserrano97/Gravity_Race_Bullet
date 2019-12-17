@@ -23,8 +23,13 @@ public:
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
 private:
-	void Add_Linear_Map(int number, vec3 separation, float gap = 15); // separation is the vec that exists between pillars. {3,0,3} will make a diagonal line with 3 meters between pillars
-	void Add_Circular_Map(int number, vec3 origin_of_rotation, float gap = 15, float density = 0.3f); // Origin of rotation = from reference vec, coordinates of the origin of the rotation that creates the map
+	// separation is the vec that exists between pillars. {3,0,3} will make a diagonal line with 3 meters between pillars
+	void Add_Linear_Map(int number, vec3 separation, float gap = 15);
+	// Origin of rotation = from reference vec, coordinates of the origin of the rotation that creates the map. number= how maany pair of pilons. gap= distance horizontal that separates pilars. //density = distance vertical that separates pilalrs. start_from= first iteration. It matters for the angles. sng = only use -1 or +1
+	void Add_Circular_Map(int number, vec3 origin_of_rotation, float gap = 15, float density = 0.3f, int sgn_x = 1, int sgn_z = 1); 
+
+
+
 public:
 	/*
 	PhysBody3D* pb_snake[MAX_SNAKE];

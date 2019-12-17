@@ -31,16 +31,20 @@ bool ModuleSceneIntro::Start()
 	Add_Linear_Map(6, vec3(5, 0, 5), 21.f);
 	*/
 	//Add_Circular_Map(int number, vec3 origin_of_rotation, float gap)
-
 	
-
-
-	Add_Linear_Map(5, vec3(0,0,10), 10.f);
-	Add_Circular_Map(30, vec3(85,0,0),20.f,0.1);
+	
 	
 	
 	Cube* littlepad = new Cube(2500, 1, 2500);
 
+	Add_Linear_Map(5, vec3(0,0,10), 10.f);
+	Add_Circular_Map(30, vec3(85,0,0),20.f,0.1); 
+	Add_Linear_Map(15, vec3(0, 0, -10), 10.f);
+	Add_Circular_Map(30, vec3(45, 0, 0), 20.f, 0.1,-1,-1);
+	Add_Linear_Map(15, vec3(0, 0, 10), 10.f);
+	
+	//littlepad = the roof. Long story here.
+	Cube* littlepad = new Cube(2500, 1, 2500);
 	littlepad->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
 	littlepad->SetPos(0, 15, 0);
 
@@ -112,13 +116,13 @@ void ModuleSceneIntro::Add_Linear_Map(int number, vec3 separation, float gap)
 	for (int i = 0; i < number; i++) {
 
 		Tremenda_pilona = new Cube(2, 20, 2);
-		Tremenda_pilona->color.Set(255, 0, 0, 60.f);
+		Tremenda_pilona->color.Set(70, 0, 255, 60.f);
 		Tremenda_pilona->SetPos(-gap + reference_vec.x, reference_vec.y, reference_vec.z);
 		primitives.PushBack(Tremenda_pilona);
 		Tremenda_pilona->body = App->physics->AddBody(*Tremenda_pilona, 0);
 
 		Tremenda_pilona = new Cube(2, 20, 2);
-		Tremenda_pilona->color.Set(255, 255, 255, 60.f);
+		Tremenda_pilona->color.Set(70, 0, 255, 60.f);
 		Tremenda_pilona->SetPos(gap + reference_vec.x, reference_vec.y, reference_vec.z);
 		primitives.PushBack(Tremenda_pilona);
 		Tremenda_pilona->body = App->physics->AddBody(*Tremenda_pilona, 0);
@@ -130,7 +134,7 @@ void ModuleSceneIntro::Add_Linear_Map(int number, vec3 separation, float gap)
 	}
 }
 
-void ModuleSceneIntro::Add_Circular_Map(int number, vec3 origin_of_rotation, float gap, float density)
+void ModuleSceneIntro::Add_Circular_Map(int number, vec3 origin_of_rotation, float gap, float density, int sgn_x, int sgn_z)
 {
 /*
 
@@ -148,14 +152,15 @@ where you need to run this equation for t taking values within the range from 0 
 	float x_pos;
 	float z_pos;
 
-	for (int i = 1; i < number +1; i++) {
+
+	for (int i = 1; i < number + 1; i++) {
 		
 		x_pos = (r - gap/2) * cos(density*i);
 		z_pos = (r - gap/2) * sin(density*i);
 
 		Tremenda_pilona = new Cube(2, 20, 2);
-		Tremenda_pilona->color.Set(255, 0, 0, 60.f);
-		Tremenda_pilona->SetPos(reference_vec.x + x_pos - origin_of_rotation.x, reference_vec.y, reference_vec.z + z_pos - origin_of_rotation.z);
+		Tremenda_pilona->color.Set(70, 0, 255, 60.f);
+		Tremenda_pilona->SetPos(reference_vec.x + sgn_x * x_pos - sgn_x * origin_of_rotation.x, reference_vec.y, reference_vec.z + sgn_z * z_pos - origin_of_rotation.z);
 		primitives.PushBack(Tremenda_pilona);
 		Tremenda_pilona->body = App->physics->AddBody(*Tremenda_pilona, 0);
 		
@@ -163,33 +168,14 @@ where you need to run this equation for t taking values within the range from 0 
 		z_pos = (r + gap / 2) * sin(density*i);
 
 		Tremenda_pilona = new Cube(2, 20, 2);
-		Tremenda_pilona->color.Set(255, 255, 255, 60.f);
-		Tremenda_pilona->SetPos(reference_vec.x + x_pos - origin_of_rotation.x, reference_vec.y, reference_vec.z + z_pos - origin_of_rotation.z);
+		Tremenda_pilona->color.Set(70, 0, 255, 60.f);
+		Tremenda_pilona->SetPos(reference_vec.x + sgn_x * x_pos - sgn_x * origin_of_rotation.x, reference_vec.y, reference_vec.z + sgn_z * z_pos - origin_of_rotation.z);
 		primitives.PushBack(Tremenda_pilona);
 		Tremenda_pilona->body = App->physics->AddBody(*Tremenda_pilona, 0);
-
-		
-		
-		/*
-		z_pos = (r + gap / 2) * cos(0.2*i) + origin_of_rotation.x +reference_vec.z;
-		x_pos = (r + gap / 2) * sin(0.2*i) + origin_of_rotation.z +reference_vec.x;
-
-		Tremenda_pilona = new Cube(2, 20, 2);
-		Tremenda_pilona->color.Set(255, 0, 0, 60.f);
-		Tremenda_pilona->SetPos(x_pos, reference_vec.y, z_pos);
-		primitives.PushBack(Tremenda_pilona);
-		Tremenda_pilona->body = App->physics->AddBody(*Tremenda_pilona, 0);
-		
-		z_pos = (r - gap / 2) * cos(0.2*i) + origin_of_rotation.x +reference_vec.z;
-		x_pos = (r - gap / 2) * sin(0.2*i) + origin_of_rotation.z +reference_vec.x;
-		Tremenda_pilona = new Cube(2, 20, 2);
-		Tremenda_pilona->color.Set(255, 255, 255, 60.f);
-		Tremenda_pilona->SetPos(x_pos, reference_vec.y, z_pos);
-		primitives.PushBack(Tremenda_pilona);
-		Tremenda_pilona->body = App->physics->AddBody(*Tremenda_pilona, 0);
-		*/
 	}
-	reference_vec.x = x_pos;
-	reference_vec.z = z_pos;
+	x_pos = (r) * cos(density*number);
+	z_pos = (r) * sin(density*number);
+	reference_vec.x = reference_vec.x + sgn_x * x_pos - sgn_x * origin_of_rotation.x;
+	reference_vec.z = reference_vec.z + sgn_z * z_pos - origin_of_rotation.z;
 }
 
