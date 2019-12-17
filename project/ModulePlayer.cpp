@@ -25,7 +25,7 @@ bool ModulePlayer::Start()
 	// Car properties ----------------------------------------
 	car.chassis_size.Set(3.5, 1.5f, 5);
 	car.chassis_offset.Set(0, 1.5, 0);
-	car.mass = 700.0f;
+	car.mass = 400.0f;
 	car.suspensionStiffness = 15.88f;
 	car.suspensionCompression = 0.83f;
 	car.suspensionDamping = 0.88f;
@@ -38,6 +38,23 @@ bool ModulePlayer::Start()
 	float wheel_radius = 1.4f;
 	float wheel_width = 0.9f;
 	float suspensionRestLength = 0.4f;
+
+	// Car properties ----------------------------------------
+	/*car.chassis_size.Set(3.5, 1.5f, 5);
+	car.chassis_offset.Set(0, 1.5, 0);
+	car.mass = 700.0f;
+	car.suspensionStiffness = 15.88f;
+	car.suspensionCompression = 0.83f;
+	car.suspensionDamping = 0.88f;
+	car.maxSuspensionTravelCm = 1000.0f;
+	car.frictionSlip = 1200;
+	car.maxSuspensionForce = 6000.0f;
+
+	// Wheel properties ---------------------------------------
+	float connection_height = 1.6f;
+	float wheel_radius = 1.4f;
+	float wheel_width = 0.9f;
+	float suspensionRestLength = 0.4f;*/
 
 	// Don't change anything below this line ------------------ que no haga que?
 
@@ -117,26 +134,49 @@ update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > MID_JOYSTICK))
 	{
 		acceleration = MAX_ACCELERATION;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] < MID_JOYSTICK) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > JOYSTICK_DEAD_ZONE))
+	{
+		acceleration = MAX_ACCELERATION * 0.6;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT || App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] < -MID_JOYSTICK)
+	{
+		if (turn < TURN_DEGREES)
+			turn = TURN_DEGREES;
+	}
+	
+	if( (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] < -JOYSTICK_DEAD_ZONE) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > -MID_JOYSTICK))
 	{
 		if(turn < TURN_DEGREES)
-			turn +=  TURN_DEGREES;
+			turn =  TURN_DEGREES * 0.5;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > MID_JOYSTICK))
 	{
 		if(turn > -TURN_DEGREES)
-			turn -= TURN_DEGREES;
+			turn = -TURN_DEGREES;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] < MID_JOYSTICK) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > JOYSTICK_DEAD_ZONE))
 	{
-		brake = BRAKE_POWER;
+		if (turn > -TURN_DEGREES)
+			turn = -TURN_DEGREES * 0.5;
+	}
+
+	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > MID_JOYSTICK))
+	{
+		//brake = BRAKE_POWER;
+		acceleration = -MAX_ACCELERATION;
+	}
+
+	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] < MID_JOYSTICK) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > JOYSTICK_DEAD_ZONE))
+	{
+		acceleration = -MAX_ACCELERATION * 0.6;
 	}
 
 	vehicle->ApplyEngineForce(acceleration);
