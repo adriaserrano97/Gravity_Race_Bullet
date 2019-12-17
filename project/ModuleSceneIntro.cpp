@@ -31,16 +31,15 @@ bool ModuleSceneIntro::Start()
 	Add_Linear_Map(6, vec3(5, 0, 5), 21.f);
 	*/
 	//Add_Circular_Map(int number, vec3 origin_of_rotation, float gap)
+
 	
-	
-	
-	
-	Cube* littlepad = new Cube(2500, 1, 2500);
+
 
 	Add_Linear_Map(5, vec3(0,0,10), 10.f);
 	Add_Circular_Map(30, vec3(85,0,0),20.f,0.1);
 	
 	
+	Cube* littlepad = new Cube(2500, 1, 2500);
 
 	littlepad->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
 	littlepad->SetPos(0, 15, 0);
@@ -49,7 +48,17 @@ bool ModuleSceneIntro::Start()
 	primitives.PushBack(littlepad);
 
 	littlepad->body = App->physics->AddBody(*littlepad, 0);
-	
+
+
+
+	Cube* detector = new Cube(10, 10, 4);
+
+	detector->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
+	detector->SetPos(-20, 5, 0);
+
+	detector->body = App->physics->AddBody(*detector, 0);
+	detector->body->SetAsSensor(true);
+
 	return ret;
 }
 

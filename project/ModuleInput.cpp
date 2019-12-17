@@ -231,7 +231,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	else
 		pad.R2 = false;
 
-	if ((App->input->keyboard[SDL_SCANCODE_I] == KEY_STATE::KEY_DOWN) || (App->input->gameController1States[SDL_CONTROLLER_BUTTON_LEFTSHOULDER] == KEY_DOWN))
+	if ((App->input->keyboard[SDL_SCANCODE_I] == KEY_STATE::KEY_DOWN) || (App->input->gameController1States[SDL_CONTROLLER_BUTTON_LEFTSHOULDER] == KEY_DOWN) || (App->input->gameController1States[SDL_CONTROLLER_BUTTON_LEFTSHOULDER] == KEY_REPEAT))
 	{
 		pad.L1 = true;
 	}
