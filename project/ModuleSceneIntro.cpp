@@ -31,11 +31,6 @@ bool ModuleSceneIntro::Start()
 	Add_Linear_Map(6, vec3(5, 0, 5), 21.f);
 	*/
 	//Add_Circular_Map(int number, vec3 origin_of_rotation, float gap)
-	
-	
-	
-	
-	Cube* littlepad = new Cube(2500, 1, 2500);
 
 	Add_Linear_Map(5, vec3(0,0,10), 10.f);
 	Add_Circular_Map(30, vec3(85,0,0),20.f,0.1); 
