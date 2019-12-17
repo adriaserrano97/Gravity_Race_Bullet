@@ -38,7 +38,7 @@ bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
-	Cam_status = Camera_Modes::FOLLOW;
+	Cam_status = Camera_Modes::MANUAL;
 
 	return ret;
 }
@@ -86,7 +86,7 @@ update_status ModuleCamera3D::Update(float dt)
 		// Now we can make this movememnt frame rate independant!
 
 		vec3 newPos(0, 0, 0);
-		float speed = 3.0f * dt;
+		float speed = 10.0f * dt;
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 			speed = 8.0f * dt;
 
