@@ -253,9 +253,9 @@ void ModulePlayer::FlipVehicle() {
 	mat4x4* player_aux = new mat4x4();
 	vehicle->GetTransform(&player_aux[0][0]);
 
-	vehicle->Copy_Only_Rotation(*rotation, *player_aux);
+	vehicle->CopyOnlyRotation(*rotation, *player_aux);
 
-	vec3 vehicle_pos = vehicle->Get_Position_From_Quat(*player_aux);
+	vec3 vehicle_pos = vehicle->GetPositionFromQuat(*player_aux);
 
 	vehicle->SetTransform(&player_aux[0][0]);
 

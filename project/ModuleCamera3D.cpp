@@ -66,7 +66,7 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		mat4x4 CarQuaternion;
 		CAR->GetTransform(&CarQuaternion);
-		vec3 car_pos = CAR->Get_Position_From_Quat(CarQuaternion);
+		vec3 car_pos = CAR->GetPositionFromQuat(CarQuaternion);
 		vec3 car_forward = CAR->GetForward();
 
 
@@ -145,7 +145,7 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		mat4x4 CarQuaternion;
 		CAR->GetTransform(&CarQuaternion);
-		vec3 car_pos = CAR->Get_Position_From_Quat(CarQuaternion);
+		vec3 car_pos = CAR->GetPositionFromQuat(CarQuaternion);
 		vec3 car_forward = CAR->GetForward();
 
 		mat3x3 rotation(CarQuaternion);
