@@ -26,10 +26,13 @@ public:
 	mat3x3 Get_Rotation_From_Quat(mat4x4 &quat) const;
 	vec3 Get_Position_From_Quat(mat4x4 &quat) const;
 	float Get_Scale_From_Quat(mat4x4 &quat) const;
-	void Copy_Only_Rotation(mat4x4 &from_this, mat4x4 &to_this) ;
+	void Copy_Only_Rotation(mat4x4 &from_this, mat4x4 &to_this);
+
+	void SetAsSensor(bool is_sensor);
 
 private:
-	btRigidBody* body = nullptr;
+	btRigidBody* body;
+	bool is_sensor;
 
 public:
 	p2List<Module*> collision_listeners;

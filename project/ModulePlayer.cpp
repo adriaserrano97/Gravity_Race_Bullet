@@ -187,6 +187,13 @@ update_status ModulePlayer::Update(float dt)
 		acceleration = -MAX_ACCELERATION * 0.6;
 	}
 
+	if (App->input->pad.L1 == true)
+	{
+		brake = BRAKE_POWER;
+	}
+	
+
+
 	vehicle->ApplyEngineForce(acceleration);
 	vehicle->Turn(turn);
 	vehicle->Brake(brake);
