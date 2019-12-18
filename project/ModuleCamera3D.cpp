@@ -38,7 +38,7 @@ bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
-	Cam_status = Camera_Modes::MANUAL;
+	Cam_status = Camera_Modes::FOLLOW;
 
 	return ret;
 }
@@ -76,8 +76,8 @@ update_status ModuleCamera3D::Update(float dt)
 		vec3 newPos = car_pos + rotation * delta_from_car;
 
 		btVector3 LookAtMe = Cam_Lerp(Position, newPos, 0.17);
-		Position = { LookAtMe.x(), LookAtMe.y(), LookAtMe.z() }; //because vec3 = btVec3 would be too fucking easy wouldn't it, Bullet? I'm not even gonna create the overloaded operator. Fuck it
-		LookAt(car_pos + vec3(0, delta_from_car.y, 0));
+		Position = { LookAtMe.x(), delta_from_car.y - car_pos.y, LookAtMe.z() }; //because vec3 = btVec3 would be too fucking easy wouldn't it, Bullet? I'm not even gonna create the overloaded operator. Fuck it
+		LookAt(car_pos - vec3(0,car_pos.y,0) + vec3(0, delta_from_car.y, 0));
 
 	}
 		break;

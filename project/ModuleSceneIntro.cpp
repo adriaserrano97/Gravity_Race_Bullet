@@ -27,14 +27,21 @@ bool ModuleSceneIntro::Start()
 	Add_Circular_Map(30, vec3(85,0,0),20.f,0.1); 
 	Add_Linear_Map(15, vec3(0, 0, -10), 10.f);
 	Add_Circular_Map(30, vec3(45, 0, 0), 20.f, 0.1,-1,-1);
-	Add_Linear_Map(15, vec3(0, 0, 10), 10.f);
+	Add_Linear_Map(12, vec3(0, 0, 10), 10.f);
+	Create_Ramp(15, 3, 15, vec3(reference_vec),90);
+	for (int i = 1; i < 8; i++) {
+		Add_Linear_Map(1, vec3(0, 0, 10), 10.f + i);  //this creates a obeerture ilusion. Fucking love these functions
+		reference_vec.y += 1;
+	}
+
+
 	
 	//littlepad = the roof. Long story here.
 	Cube* littlepad = new Cube(2500, 1, 2500);
 	littlepad->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
 	littlepad->SetPos(0, 15, 0);
-	//primitives.PushBack(littlepad);
-	//littlepad->body = App->physics->AddBody(*littlepad, 0);
+	primitives.PushBack(littlepad);
+	littlepad->body = App->physics->AddBody(*littlepad, 0);
 	
 	return ret;
 }
@@ -88,20 +95,19 @@ void ModuleSceneIntro::Add_Linear_Map(int number, vec3 separation, float gap)
 
 	for (int i = 0; i < number; i++) {
 
-		Tremenda_pilona = new Cube(2, 20, 2);
+		Tremenda_pilona = new Cube(2, 10, 2);
 		Tremenda_pilona->color.Set(70, 0, 255, 60.f);
 		Tremenda_pilona->SetPos(-gap + reference_vec.x, reference_vec.y, reference_vec.z);
 		primitives.PushBack(Tremenda_pilona);
 		Tremenda_pilona->body = App->physics->AddBody(*Tremenda_pilona, 0);
 
-		Tremenda_pilona = new Cube(2, 20, 2);
+		Tremenda_pilona = new Cube(2, 10, 2);
 		Tremenda_pilona->color.Set(70, 0, 255, 60.f);
 		Tremenda_pilona->SetPos(gap + reference_vec.x, reference_vec.y, reference_vec.z);
 		primitives.PushBack(Tremenda_pilona);
 		Tremenda_pilona->body = App->physics->AddBody(*Tremenda_pilona, 0);
 
 		reference_vec.x += separation.x;
-		reference_vec.y += separation.y;
 		reference_vec.z += separation.z;
 
 	}
@@ -131,7 +137,7 @@ where you need to run this equation for t taking values within the range from 0 
 		x_pos = (r - gap/2) * cos(density*i);
 		z_pos = (r - gap/2) * sin(density*i);
 
-		Tremenda_pilona = new Cube(2, 20, 2);
+		Tremenda_pilona = new Cube(2, 10, 2);
 		Tremenda_pilona->color.Set(70, 0, 255, 60.f);
 		Tremenda_pilona->SetPos(reference_vec.x + sgn_x * x_pos - sgn_x * origin_of_rotation.x, reference_vec.y, reference_vec.z + sgn_z * z_pos - origin_of_rotation.z);
 		primitives.PushBack(Tremenda_pilona);
@@ -140,7 +146,7 @@ where you need to run this equation for t taking values within the range from 0 
 		x_pos = (r + gap / 2) * cos(density*i);
 		z_pos = (r + gap / 2) * sin(density*i);
 
-		Tremenda_pilona = new Cube(2, 20, 2);
+		Tremenda_pilona = new Cube(2, 10, 2);
 		Tremenda_pilona->color.Set(70, 0, 255, 60.f);
 		Tremenda_pilona->SetPos(reference_vec.x + sgn_x * x_pos - sgn_x * origin_of_rotation.x, reference_vec.y, reference_vec.z + sgn_z * z_pos - origin_of_rotation.z);
 		primitives.PushBack(Tremenda_pilona);
@@ -150,5 +156,18 @@ where you need to run this equation for t taking values within the range from 0 
 	z_pos = (r) * sin(density*number);
 	reference_vec.x = reference_vec.x + sgn_x * x_pos - sgn_x * origin_of_rotation.x;
 	reference_vec.z = reference_vec.z + sgn_z * z_pos - origin_of_rotation.z;
+}
+
+void ModuleSceneIntro::Create_Ramp(float X, float Y, float Z, vec3 pos, float angle)
+{
+	Cube* Ramp_wannabe;
+	Ramp_wannabe = new Cube(X, Y, Z);
+	Ramp_wannabe->SetPos(pos.x, pos.y, pos.z);
+	Ramp_wannabe->SetRotation(angle,vec3(1,0,0));
+	Ramp_wannabe->color.Set(255, 255, 255, 60.f);
+	primitives.PushBack(Ramp_wannabe);
+	Ramp_wannabe->body = App->physics->AddBody(*Ramp_wannabe, 0);
+
+
 }
 

@@ -27,8 +27,8 @@ private:
 	void Add_Linear_Map(int number, vec3 separation, float gap = 15);
 	// Origin of rotation = from reference vec, coordinates of the origin of the rotation that creates the map. number= how maany pair of pilons. gap= distance horizontal that separates pilars. //density = distance vertical that separates pilalrs. start_from= first iteration. It matters for the angles. sng = only use -1 or +1
 	void Add_Circular_Map(int number, vec3 origin_of_rotation, float gap = 15, float density = 0.3f, int sgn_x = 1, int sgn_z = 1); 
-
-
+	//ramp = cube rotated 45 degrees. Yeah. Deal with it.
+	void Create_Ramp(float X, float Y, float Z, vec3 pos, float angle);
 
 public:
 	/*

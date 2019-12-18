@@ -132,8 +132,16 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update(float dt)
 {
+	//Debug: "M" to reset position
+	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+	{
+		vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
+		
+	}
+	
+	
 	turn = acceleration = brake = 0.0f;
-
+	
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > MID_JOYSTICK))
 	{
 		acceleration = MAX_ACCELERATION;
