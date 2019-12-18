@@ -24,11 +24,11 @@ public:
 
 private:
 	// separation is the vec that exists between pillars. {3,0,3} will make a diagonal line with 3 meters between pillars
-	void Add_Linear_Map(int number, vec3 separation, float gap = 15);
+	void AddLinearMap(int number, vec3 separation, float gap = 15);
 	// Origin of rotation = from reference vec, coordinates of the origin of the rotation that creates the map. number= how maany pair of pilons. gap= distance horizontal that separates pilars. //density = distance vertical that separates pilalrs. start_from= first iteration. It matters for the angles. sng = only use -1 or +1
-	void Add_Circular_Map(int number, vec3 origin_of_rotation, float gap = 15, float density = 0.3f, int sgn_x = 1, int sgn_z = 1); 
+	void AddCircularMap(int number, vec3 origin_of_rotation, float gap = 15, float density = 0.3f, int sgn_x = 1, int sgn_z = 1); 
 	//ramp = cube rotated 45 degrees. Yeah. Deal with it.
-	void Create_Ramp(float X, float Y, float Z, vec3 pos, float angle);
+	void CreateRamp(float X, float Y, float Z, vec3 pos, float angle);
 
 public:
 	/*
@@ -55,5 +55,5 @@ public:
 
 private:
 	vec3 reference_vec; //we'll use this to create the map. It's gonna be fucking awesome.
-	int Current_Colors[3];
+	int current_colors[3];
 };
