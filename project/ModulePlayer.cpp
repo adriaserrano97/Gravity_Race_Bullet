@@ -5,8 +5,9 @@
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
 
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
+ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL), flip(false)
 {
 	turn = acceleration = brake = 0.0f;
 	
@@ -210,6 +211,48 @@ void ModulePlayer::HandleInput() {
 	{
 		brake = BRAKE_POWER;
 	}
+
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN || App->input->pad.R1 == true)
+	{
+		FlipVehicle();
+	}
+
+}
+
+
+void ModulePlayer::FlipVehicle() {
+
+	mat4x4* rotation;
+	float y_adjustment;
+
+	App->physics->FlipGravity();
+
+	if (flip == true)
+	{
+		rotation = new mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+		y_adjustment = -1.5;
+		flip = false;
+	}
+
+	else if (flip == false)
+	{
+		rotation = new mat4x4(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		y_adjustment = 1.5;
+		flip = true;
+	}
+
+
+	mat4x4* player_aux = new mat4x4();
+	vehicle->GetTransform(&player_aux[0][0]);
+
+	vehicle->Copy_Only_Rotation(*rotation, *player_aux);
+
+	vec3 vehicle_pos = vehicle->Get_Position_From_Quat(*player_aux);
+
+	vehicle->SetTransform(&player_aux[0][0]);
+
+	vehicle->SetPos(vehicle_pos.x, vehicle_pos.y + y_adjustment, vehicle_pos.z);
+
 }
 
 

@@ -135,47 +135,6 @@ update_status ModulePhysics3D::Update(float dt)
 			float force = 30.0f;
 			AddBody(s)->Push(-(App->camera->Z.x * force), -(App->camera->Z.y * force), -(App->camera->Z.z * force));
 		}
-
-		if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-		{
-			btVector3 aux_grav = world->getGravity();
-			aux_grav.setY(-1 * aux_grav.getY());
-			world->setGravity(aux_grav);
-			
-			mat4x4* rotation = new mat4x4(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-			mat4x4* player_aux = new mat4x4();
-			App->player->vehicle->GetTransform(&player_aux[0][0]);
-
-			App->player->vehicle->Copy_Only_Rotation(*rotation, *player_aux);
-			
-			vec3 vehicle_pos = App->player->vehicle->Get_Position_From_Quat(*player_aux);
-
-			App->player->vehicle->SetTransform(&player_aux[0][0]);
-
-			App->player->vehicle->SetPos(vehicle_pos.x, vehicle_pos.y + 1.5, vehicle_pos.z);
-			
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
-		{
-			btVector3 aux_grav = world->getGravity();
-			aux_grav.setY(-1 * aux_grav.getY());
-			world->setGravity(aux_grav);
-
-			mat4x4* rotation = new mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
-			mat4x4* player_aux = new mat4x4();
-			App->player->vehicle->GetTransform(&player_aux[0][0]);
-
-			App->player->vehicle->Copy_Only_Rotation(*rotation, *player_aux);
-
-			vec3 vehicle_pos = App->player->vehicle->Get_Position_From_Quat(*player_aux);
-
-			App->player->vehicle->SetTransform(&player_aux[0][0]);
-
-			App->player->vehicle->SetPos(vehicle_pos.x, vehicle_pos.y - 1.5, vehicle_pos.z);
-		}
-
-	
 	}
 
 	return UPDATE_CONTINUE;
@@ -400,6 +359,14 @@ void ModulePhysics3D::AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, c
 	world->addConstraint(hinge, disable_collision);
 	constraints.add(hinge);
 	hinge->setDbgDrawSize(2.0f);
+}
+
+
+void ModulePhysics3D::FlipGravity() {
+
+	btVector3 aux_grav = world->getGravity();
+	aux_grav.setY(-1 * aux_grav.getY());
+	world->setGravity(aux_grav);
 }
 
 // =============================================

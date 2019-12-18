@@ -23,6 +23,7 @@ public:
 
 private:
 	void HandleInput();
+	void FlipVehicle();
 
 public:
 	PhysVehicle3D* vehicle;
@@ -31,4 +32,5 @@ private:
 	float turn;
 	float acceleration;
 	float brake;
+	bool flip;
 };
