@@ -7,7 +7,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL), flip(false)
+ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL), flip(false), last_checkpoint(nullptr)
 {
 	turn = acceleration = brake = 0.0f;
 	
@@ -144,9 +144,7 @@ update_status ModulePlayer::Update(float dt)
 
 	vehicle->Render();
 
-	char title[80];
-	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
-	App->window->SetTitle(title);
+	
 
 
 	return UPDATE_CONTINUE;
@@ -158,7 +156,18 @@ void ModulePlayer::HandleInput() {
 	//Debug: "M" to reset position
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
-		vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
+		if (last_checkpoint == nullptr)
+		{
+			vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
+		}
+
+		else
+		{
+			mat4x4 aux;
+			last_checkpoint->GetTransform(&aux);
+			vehicle->SetTransform(&aux);
+		}
+		
 
 	}
 
@@ -198,7 +207,6 @@ void ModulePlayer::HandleInput() {
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > MID_JOYSTICK))
 	{
-		//brake = BRAKE_POWER;
 		acceleration = -MAX_ACCELERATION;
 	}
 
@@ -257,6 +265,7 @@ void ModulePlayer::FlipVehicle() {
 
 
 void ModulePlayer::OnCollision(PhysBody3D* body1, PhysBody3D* body2) {
-
+	
+	last_checkpoint = body1;
 	
 }
