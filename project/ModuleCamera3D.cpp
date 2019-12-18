@@ -38,7 +38,7 @@ bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
-	Cam_status = Camera_Modes::FOLLOW;
+	Cam_status = Camera_Modes::MANUAL;
 
 	return ret;
 }
