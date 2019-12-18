@@ -87,16 +87,17 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 			PhysBody3D* pbodyA = (PhysBody3D*)obA->getUserPointer();
 			PhysBody3D* pbodyB = (PhysBody3D*)obB->getUserPointer();
 
-			if(pbodyA && pbodyB)
+			if (pbodyA)
 			{
 				p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
-				while(item)
+				while (item)
 				{
 					item->data->OnCollision(pbodyA, pbodyB);
 					item = item->next;
 				}
-
-				item = pbodyB->collision_listeners.getFirst();
+			}
+			if (pbodyB){
+				p2List_item<Module*>* item = pbodyB->collision_listeners.getFirst();
 				while(item)
 				{
 					item->data->OnCollision(pbodyB, pbodyA);

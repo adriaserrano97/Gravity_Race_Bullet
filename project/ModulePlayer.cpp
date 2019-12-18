@@ -132,17 +132,36 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update(float dt)
 {
+
+	turn = acceleration = brake = 0.0f;
+
+	HandleInput();
+
+	vehicle->ApplyEngineForce(acceleration);
+	vehicle->Turn(turn);
+	vehicle->Brake(brake);
+
+	vehicle->Render();
+
+	char title[80];
+	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
+	App->window->SetTitle(title);
+
+
+	return UPDATE_CONTINUE;
+}
+
+
+void ModulePlayer::HandleInput() {
+
 	//Debug: "M" to reset position
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
 		vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
-		
+
 	}
-	
-	
-	turn = acceleration = brake = 0.0f;
-	
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > MID_JOYSTICK))
+
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > MID_JOYSTICK))
 	{
 		acceleration = MAX_ACCELERATION;
 	}
@@ -157,16 +176,16 @@ update_status ModulePlayer::Update(float dt)
 		if (turn < TURN_DEGREES)
 			turn = TURN_DEGREES;
 	}
-	
-	if( (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] < -JOYSTICK_DEAD_ZONE) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > -MID_JOYSTICK))
+
+	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] < -JOYSTICK_DEAD_ZONE) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > -MID_JOYSTICK))
 	{
-		if(turn < TURN_DEGREES)
-			turn =  TURN_DEGREES * 0.5;
+		if (turn < TURN_DEGREES)
+			turn = TURN_DEGREES * 0.5;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > MID_JOYSTICK))
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > MID_JOYSTICK))
 	{
-		if(turn > -TURN_DEGREES)
+		if (turn > -TURN_DEGREES)
 			turn = -TURN_DEGREES;
 	}
 
@@ -176,7 +195,7 @@ update_status ModulePlayer::Update(float dt)
 			turn = -TURN_DEGREES * 0.5;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > MID_JOYSTICK))
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > MID_JOYSTICK))
 	{
 		//brake = BRAKE_POWER;
 		acceleration = -MAX_ACCELERATION;
@@ -191,26 +210,10 @@ update_status ModulePlayer::Update(float dt)
 	{
 		brake = BRAKE_POWER;
 	}
-	
-
-
-	vehicle->ApplyEngineForce(acceleration);
-	vehicle->Turn(turn);
-	vehicle->Brake(brake);
-
-	vehicle->Render();
-
-	char title[80];
-	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
-	App->window->SetTitle(title);
-
-
-
-	
-
-
-	return UPDATE_CONTINUE;
 }
 
 
+void ModulePlayer::OnCollision(PhysBody3D* body1, PhysBody3D* body2) {
 
+	
+}

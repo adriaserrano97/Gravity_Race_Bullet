@@ -70,18 +70,22 @@ bool ModuleSceneIntro::Start()
 	//littlepad = the roof. Long story here.
 	Cube* littlepad = new Cube(2500, 1, 2500);
 	littlepad->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
-	littlepad->SetPos(0, roof_height, 0);	
+	littlepad->SetPos(0, 10, 0);	
 
 	primitives.PushBack(littlepad);
 	littlepad->body = App->physics->AddBody(*littlepad, 0);
 
+	
 	Cube* detector = new Cube(10, 10, 4);
 
 	detector->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
-	detector->SetPos(-20, 5, 0);
+	detector->SetPos(0, 5, 20);
 
 	detector->body = App->physics->AddBody(*detector, 0);
 	detector->body->SetAsSensor(true);
+	detector->body->collision_listeners.add(this);
+	detector->body->collision_listeners.add(App->player);
+
 
 	return ret;
 }
@@ -125,6 +129,7 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
+
 }
 
 void ModuleSceneIntro::Add_Linear_Map(int number, vec3 separation, float gap)
