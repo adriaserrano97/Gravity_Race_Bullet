@@ -56,4 +56,5 @@ public:
 private:
 	vec3 reference_vec; //we'll use this to create the map. It's gonna be fucking awesome.
 	int current_colors[3];
+	float time;
 };
