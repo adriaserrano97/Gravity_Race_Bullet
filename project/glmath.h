@@ -415,10 +415,15 @@ public:
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
+vec4 GetQuatFromAngleAndAxis(float angle, vec3 axis);
+
+
 class mat2x2;
 class mat3x3;
 class mat4x4;
 
+mat3x3 QuatToRotMat(vec4 quat);
+mat4x4 RotToTransform(mat3x3 rot);
 // ----------------------------------------------------------------------------------------------------------------------------
 
 class mat2x2

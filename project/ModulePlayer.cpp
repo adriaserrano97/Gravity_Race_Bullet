@@ -118,7 +118,6 @@ bool ModulePlayer::Start()
 
 	vehicle = App->physics->AddVehicle(car);
 	vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
-	
 	return true;
 }
 
@@ -144,8 +143,8 @@ update_status ModulePlayer::Update(float dt)
 
 	vehicle->Render();
 
-	char title[80];
-	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
+	char title[400];
+	sprintf_s(title, "%.1f Km/h  vec forward is: %.1f x %.1f y %.1f z ", vehicle->GetKmh(), vehicle->GetForward().x, vehicle->GetForward().y, vehicle->GetForward().z);
 	App->window->SetTitle(title);
 
 
@@ -211,7 +210,6 @@ void ModulePlayer::HandleInput() {
 	{
 		brake = BRAKE_POWER;
 	}
-
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN || App->input->pad.R1 == true)
 	{
 		FlipVehicle();
@@ -222,36 +220,47 @@ void ModulePlayer::HandleInput() {
 
 void ModulePlayer::FlipVehicle() {
 
-	mat4x4* rotation;
-	float y_adjustment;
-
 	App->physics->FlipGravity();
+	float y_adjustment;
+	App->camera->car_on_ground = !(App->camera->car_on_ground);
+	
 
 	if (flip == true)
 	{
-		rotation = new mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
 		y_adjustment = -1.5;
 		flip = false;
 	}
 
 	else if (flip == false)
 	{
-		rotation = new mat4x4(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		y_adjustment = 1.5;
 		flip = true;
 	}
-
-
+	
 	mat4x4* player_aux = new mat4x4();
 	vehicle->GetTransform(&player_aux[0][0]);
 
-	vehicle->Copy_Only_Rotation(*rotation, *player_aux);
+	
+	if (sgn(y_adjustment) > 0) {
+		//player_aux->rotate(180, vec3(aux->getX(), aux->getY(), aux->getZ()));
+		//vehicle->SetRotation(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
+		//QuatToRotMat(GetQuatFromAngleAndAxis(180, normalize(vehicle->GetForward())));
+		//*player_aux = RotToTransform(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
 
-	vec3 vehicle_pos = vehicle->Get_Position_From_Quat(*player_aux);
+		player_aux->rotate(180, vehicle->GetForward());
 
+
+	}
+	else {
+		//vehicle->SetRotation(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
+		//QuatToRotMat(GetQuatFromAngleAndAxis(180, normalize(vehicle->GetForward())));
+		//*player_aux = RotToTransform(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
+	
+		player_aux->rotate(360, vehicle->GetForward());
+	}
+	
+	player_aux->M[13] += y_adjustment;
 	vehicle->SetTransform(&player_aux[0][0]);
-
-	vehicle->SetPos(vehicle_pos.x, vehicle_pos.y + y_adjustment, vehicle_pos.z);
 
 }
 

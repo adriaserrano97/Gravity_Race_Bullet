@@ -20,7 +20,9 @@ public:
 	void GetTransform(float* matrix) const;
 	void SetTransform(const float* matrix) const;
 	void SetPos(float x, float y, float z);
+	void SetRotation(mat3x3 rot);
 	vec3 GetForward();
+	vec3 Get2DForward();
 	mat3x3 GetRotation();
 
 	mat3x3 Get_Rotation_From_Quat(mat4x4 &quat) const;

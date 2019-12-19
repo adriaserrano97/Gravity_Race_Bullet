@@ -61,7 +61,43 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	body->setWorldTransform(t);
 }
 
+void PhysBody3D::SetRotation(mat3x3 rot)
+{
+	mat4x4 aux;
+	GetTransform(&aux);
+	btTransform whatevs;
+	
+	aux.M[0] = rot.M[0];
+	aux.M[1] = rot.M[1];
+	aux.M[2] = rot.M[2];
+
+	aux.M[4] = rot.M[3];
+	aux.M[5] = rot.M[4];
+	aux.M[6] = rot.M[5];
+
+	aux.M[7] = rot.M[6];
+	aux.M[8] = rot.M[7];
+	aux.M[9] = rot.M[8];
+	
+	whatevs.setFromOpenGLMatrix(&aux);
+	body->setWorldTransform(whatevs);
+
+}
+
 vec3 PhysBody3D::GetForward()
+{
+	mat4x4 transform;
+	body->getWorldTransform().getOpenGLMatrix(&transform);
+
+	mat3x3 rotation(transform);
+
+	vec3 forward(0.f, 0.f, 1.f);
+
+	forward = rotation * forward;
+
+	return forward;
+}
+vec3 PhysBody3D::Get2DForward()
 {
 	mat4x4 transform;
 	body->getWorldTransform().getOpenGLMatrix(&transform);

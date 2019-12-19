@@ -32,6 +32,7 @@ public:
 	
 	vec3 X, Y, Z, Position, Reference;
 	vec3 InitialPosition;
+	bool car_on_ground;
 	
 
 private:

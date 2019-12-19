@@ -39,6 +39,7 @@ bool ModuleCamera3D::Start()
 	LOG("Setting up the camera");
 	bool ret = true;
 	Cam_status = Camera_Modes::FOLLOW;
+	car_on_ground = true;
 
 	return ret;
 }
@@ -75,10 +76,16 @@ update_status ModuleCamera3D::Update(float dt)
 		mat3x3 rotation(CarQuaternion);
 		vec3 newPos = car_pos + rotation * delta_from_car;
 
-		btVector3 LookAtMe = Cam_Lerp(Position, newPos, 0.17);
-		Position = { LookAtMe.x(), delta_from_car.y - car_pos.y, LookAtMe.z() }; //because vec3 = btVec3 would be too fucking easy wouldn't it, Bullet? I'm not even gonna create the overloaded operator. Fuck it
-		LookAt(car_pos - vec3(0,car_pos.y,0) + vec3(0, delta_from_car.y, 0));
-
+		if (car_on_ground == true) {
+			btVector3 LookAtMe = Cam_Lerp(Position, newPos, 0.17);
+			Position = { LookAtMe.x(), delta_from_car.y - car_pos.y, LookAtMe.z() }; //because vec3 = btVec3 would be too fucking easy wouldn't it, Bullet? I'm not even gonna create the overloaded operator. Fuck it
+			LookAt(car_pos - vec3(0, car_pos.y, 0) + vec3(0, delta_from_car.y, 0));
+		}
+		else {
+			btVector3 LookAtMe = Cam_Lerp(Position, newPos, 0.17);
+			Position = { LookAtMe.x(), -delta_from_car.y + car_pos.y, LookAtMe.z() }; //because vec3 = btVec3 would be too fucking easy wouldn't it, Bullet? I'm not even gonna create the overloaded operator. Fuck it
+			LookAt(car_pos - vec3(0, car_pos.y, 0) + vec3(0, delta_from_car.y, 0));
+		}
 	}
 		break;
 	case Camera_Modes::MANUAL:

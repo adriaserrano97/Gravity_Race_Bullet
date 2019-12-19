@@ -25,7 +25,7 @@ bool ModuleSceneIntro::Start()
 	
 	//Here goes the map: absolute yeeet my boi
 
-
+	/*
 	//START MAP
 	
 		//Pink
@@ -64,7 +64,7 @@ bool ModuleSceneIntro::Start()
 	current_colors[0] = 0; current_colors[1] = 1; current_colors[2] = 1;
 
 	//END MAP
-
+	*/
 
 	//littlepad = the roof. Long story here.
 	Cube* littlepad = new Cube(2500, 1, 2500);

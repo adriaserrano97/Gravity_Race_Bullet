@@ -174,6 +174,44 @@ float* mat2x2::operator & ()
 	return (float*)this;
 }
 
+vec4 GetQuatFromAngleAndAxis(float angle, vec3 axis)
+{
+	float a = angle / 180.0f * (float)M_PI;
+	vec3 u = normalize(axis);
+	vec4 quat;
+
+	quat.w = cos(a / 2);
+	quat.x = (sin(a / 2))*u.x;
+	quat.y = (sin(a / 2))*u.y;
+	quat.z = (sin(a / 2))*u.z;
+
+	return quat;
+
+}
+
+mat3x3 QuatToRotMat(vec4 quat)
+{
+	mat3x3 R;
+	float x = quat.x; float y = quat.y; float z = quat.z; float s = quat.w;
+	
+	R[0] = 1 - 2 * y*y - 2 * z*z; R[3] = 2 * x*y - 2 * s*z;     R[6] = 2 * x*z + 2 * s*y;
+	R[1] = 2 * x*y + 2 * s*z;     R[4] = 1 - 2 * x*x - 2 * z*z; R[7] = 2 * y*z - 2 * s*x;
+	R[2] = 2 * x*z - 2 * s*y;     R[5] = 2 * y*z + 2 * s*x;     R[8] = 1 - 2 * x*x - 2 * y*y;
+
+	return R;
+}
+
+mat4x4 RotToTransform(mat3x3 rot)
+{
+	mat4x4 transform;
+	transform.M[0] = rot.M[0]; transform.M[3] = rot.M[0]; transform.M[0] = rot.M[6]; transform.M[0] = 0;
+	transform.M[0] = rot.M[1]; transform.M[4] = rot.M[0]; transform.M[0] = rot.M[7]; transform.M[0] = 0;
+	transform.M[0] = rot.M[2]; transform.M[5] = rot.M[0]; transform.M[0] = rot.M[8]; transform.M[0] = 0;
+	transform.M[0] = 0; transform.M[0] = 0; transform.M[0] = 0; transform.M[0] = 1;
+
+	return transform;;
+}
+
 mat2x2 operator * (const mat2x2 &Matrix1, const mat2x2 &Matrix2)
 {
 	mat2x2 Matrix3;
