@@ -250,10 +250,22 @@ void ModulePlayer::FlipVehicle() {
 	mat4x4* player_aux = new mat4x4();
 	vehicle->GetTransform(&player_aux[0][0]);
 
-	vehicle->Copy_Only_Rotation(*rotation, *player_aux);
+	if (sgn(y_adjustment) > 0) {
+		//player_aux->rotate(180, vec3(aux->getX(), aux->getY(), aux->getZ()));
+		//vehicle->SetRotation(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
+		//QuatToRotMat(GetQuatFromAngleAndAxis(180, normalize(vehicle->GetForward())));
+		//*player_aux = RotToTransform(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
+		player_aux->rotate(180, vehicle->GetForward());
+	}
+	else {
+		//vehicle->SetRotation(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
+		//QuatToRotMat(GetQuatFromAngleAndAxis(180, normalize(vehicle->GetForward())));
+		//*player_aux = RotToTransform(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
 
-	vec3 vehicle_pos = vehicle->Get_Position_From_Quat(*player_aux);
+		player_aux->rotate(360, vehicle->GetForward());
+	}
 
+	player_aux->M[13] += y_adjustment;
 	vehicle->SetTransform(&player_aux[0][0]);
 
 }
