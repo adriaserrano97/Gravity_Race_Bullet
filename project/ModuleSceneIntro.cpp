@@ -23,49 +23,7 @@ bool ModuleSceneIntro::Start()
 	reference_vec = vec3(0, 0, 0);
 	float roof_height = 10;
 
-	
-	//Here goes the map: absolute yeeet my boi
 
-	/*
-	//START MAP
-	
-		//Pink
-	current_colors[0] = 1; current_colors[1] = 0; current_colors[2] = 1;
-	AddLinearMap(5, vec3(0,0,10), 10.f);
-	AddCircularMap(30, vec3(85,0,0),20.f,0.1); 
-	AddLinearMap(15, vec3(0, 0, -10), 10.f);
-	AddCircularMap(30, vec3(45, 0, 0), 20.f, 0.1,-1,-1);
-	for (int i = 1; i < 8; i++) {
-		AddLinearMap(1, vec3(0, 0, 10), 8.f +i);  //this creates a obeerture ilusion. Fucking love these functions
-	}
-	CreateRamp(25, 3, 4, vec3(reference_vec),90);
-	reference_vec.y += roof_height;
-
-		//Turquoise. Because according to my girflind that's not fucking blue. It's turquoise. Go fucking figure.
-	current_colors[0] = 0; current_colors[1] = 1; current_colors[2] = 1;
-	for (int i = 1; i < 8; i++) {
-		AddLinearMap(1, vec3(0, 0, 10), 16.f - i);  //this creates a obeerture ilusion. Fucking love these functions
-	}
-	AddLinearMap(8, vec3(10, 0, 10), 16.f);
-	AddCircularMap(50, vec3(85, 0, 0), 30.f, 0.07,-1,1);
-	AddLinearMap(12, vec3(-7, 0, -5), 23.f);
-	AddLinearMap(12, vec3(0, 0, -5), 16.f);
-	CreateRamp(25, roof_height +3, 4, vec3(reference_vec), 90);
-
-		//Pink
-	current_colors[0] = 1; current_colors[1] = 0; current_colors[2] = 1;
-	reference_vec.y -= roof_height;
-	AddLinearMap(6, vec3(0, 0, -5), 16.f);
-	AddCircularMap(30, vec3(45, 0, 0), 47.f, 0.1, 1, -1);
-	for (int i = 1; i < 7; i++) {
-		AddLinearMap(1, vec3(0, 0, 10), 23.f - 2*i);  //this creates a obeerture ilusion. Fucking love these functions
-	}
-	reference_vec.y -= roof_height;
-		//Turquoise. 
-	current_colors[0] = 0; current_colors[1] = 1; current_colors[2] = 1;
-
-	//END MAP
-	*/
 
 	//START MAP
 
@@ -125,7 +83,13 @@ bool ModuleSceneIntro::Start()
 	checkpoint3->body->collision_listeners.add(App->player);
 
 	AddCircularMap(30, vec3(45, 0, 0), 30, 0.1, -1, 1);
-	CreateBarrier();
+	
+	CreateBarrier(0, -55);
+
+	CreateBarrier(-15, -85);
+
+	CreateBarrier(15, -85);
+
 	AddLinearMap(20, vec3(0, 0, -10), 35.f);
 
 	AddCircularMap(30, vec3(45, 0, 0), 30, 0.1, -1, -1);
@@ -133,7 +97,7 @@ bool ModuleSceneIntro::Start()
 	
 	
 	CreateRamp(25, 3, 40, vec3(reference_vec), -15, vec3(1, 0, 0));
-	
+
 	//Turquoise
 	current_colors[0] = 0; current_colors[1] = 1; current_colors[2] = 1;
 	reference_vec.y += roof_height;
@@ -266,8 +230,6 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2) {
 void ModuleSceneIntro::AddLinearMap(int number, vec3 separation, float gap) 
 {
 
-
-
 	Cube* pilar;
 
 
@@ -351,20 +313,20 @@ void ModuleSceneIntro::CreateRamp(float X, float Y, float Z, vec3 pos, float ang
 }
 
 
-void ModuleSceneIntro::CreateBarrier() {
+void ModuleSceneIntro::CreateBarrier(int x, int z) {
 
 	int aux_h = 5; //definir la altura de la rampa
 	Cube* pillar = new Cube(15, 0.2, 0.2); //el pilar que aguanta la rampa
 	pillar->color.Set(0, 1, 0);
-	pillar->SetPos(reference_vec.x, 6, reference_vec.z); //cambiar x,z para donde quieres el bicho
+	pillar->SetPos(reference_vec.x + x, 9, reference_vec.z + z); //cambiar x,z para donde quieres el bicho
 	primitives.PushBack(pillar);
 	pillar->body = App->physics->AddBody(*pillar, 0);
 
-	Cube* ramp_pillar = new Cube(15, 15, 0.3); //la rampa en si. la z es como de larga es
+	Cube* ramp_pillar = new Cube(15, 10, 0.3); //la rampa en si. la z es como de larga es
 	ramp_pillar->color.Set(0, 1, 0);
 	ramp_pillar->SetPos(reference_vec.x, 6, 10); //esto da igual porque el hinge lo va a forzar a estar con el pilar
 	primitives.PushBack(ramp_pillar);
-	ramp_pillar->SetRotation(20,vec3(1,0,0));
+	ramp_pillar->SetRotation(180,vec3(1,0,0));
 	ramp_pillar->body = App->physics->AddBody(*ramp_pillar, 10); //este ultimo parametro es la masa de la rampa. a mas suave, mas facil de mover
 	App->physics->AddConstraintHinge(*pillar->body, *ramp_pillar->body, vec3(-0.3, 0, -0.3), vec3(0, -0.2, 0), vec3(1, 0, 0), vec3(1, 0, 0), true);
 	//									1st body        2nd body    punto local del 1st body  punto local del 2nd body    eje de movimiento.			true= los bichos no colision
