@@ -23,9 +23,15 @@ public:
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
 private:
-	// separation is the vec that exists between pillars. {3,0,3} will make a diagonal line with 3 meters between pillars
-	void AddLinearMap(int number, vec3 separation, float gap = 15);
-	// Origin of rotation = from reference vec, coordinates of the origin of the rotation that creates the map. number= how maany pair of pilons. gap= distance horizontal that separates pilars. //density = distance vertical that separates pilalrs. start_from= first iteration. It matters for the angles. sng = only use -1 or +1
+	
+	//put "number" pairs of pilars with a separation between them of "gap". The local position of each pilar is "vec3 separation" from the last pillar added. 
+	//This function automatically updates the vector reference_vec, used to track where should the next pair of pilars appear
+	void AddLinearMap(int number, vec3 separation, float gap = 15); 
+	
+	//put "number" pairs of pilars with a separation between them of "gap". All those pillars are on the circumference of relative origin "origin_of_rotation"
+	//all of the pillars are on radius norm(origin_of rotation) +/- gap/2. "density" does determine how little is the distance between pillar spawns
+	//sgn_x and sgn_z are used to determine the quadrant you're placing your imaginary circle on, thus reguling the direction that the pairs of pillars follow.
+	//This function automatically updates the vector reference_vec, used to track where should the next pair of pilars appear
 	void AddCircularMap(int number, vec3 origin_of_rotation, float gap = 15, float density = 0.3f, int sgn_x = 1, int sgn_z = 1); 
 	//ramp = cube rotated 45 degrees. Yeah. Deal with it.
 	void CreateRamp(float X, float Y, float Z, vec3 pos, float angle, vec3 direction = vec3(1, 0, 0));
@@ -33,14 +39,6 @@ private:
 	void CreateBarrier();
 
 public:
-	/*
-	PhysBody3D* pb_snake[MAX_SNAKE];
-	Sphere s_snake[MAX_SNAKE];
-
-	PhysBody3D* pb_snake2[MAX_SNAKE];
-	Sphere s_snake2[MAX_SNAKE];
-	*/
-
 	PhysBody3D* pb_chassis;
 	Cube p_chassis;
 

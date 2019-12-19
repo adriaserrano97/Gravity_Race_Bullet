@@ -232,8 +232,10 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2) {
 
 }
 
-void ModuleSceneIntro::AddLinearMap(int number, vec3 separation, float gap)
+void ModuleSceneIntro::AddLinearMap(int number, vec3 separation, float gap) 
 {
+
+
 
 	Cube* pilar;
 
