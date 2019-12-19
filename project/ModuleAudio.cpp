@@ -41,6 +41,9 @@ bool ModuleAudio::Init()
 		ret = false;
 	}
 
+	music = Mix_LoadMUS("assets/song.ogg");
+	Mix_PlayMusic(music, -1);
+
 	return ret;
 }
 

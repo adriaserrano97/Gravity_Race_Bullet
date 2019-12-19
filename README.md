@@ -33,12 +33,9 @@ Currently there is no installation required, just open the .exe provided in the 
 	Check out our map generator functions! AddLinearMap & AddCircularMap
 
 ## Worthwhile considerations:
-Follow the layout: pink on the ground and blue on the cealing. Hit all checkpoints in time window until the end to win the game! How fast can you do it? (Keep track of it on window name)
+Follow the layout: pink on the ground and blue on the cealing. Hit all checkpoints in time to win the game! If you run out of time, you'll have to start again
 R2 / L2 add acceleration, not movement: if you've been pressing those buttons for a while, the car has enough acc to move on it's own!
 Each time you see a white ramp, go towards it: once you're in, swich gravity! this way you'll hit the checkpoint.
-The green ramp is a hinge constrain: you can either reduce acc and go above it (boring & slow) or trying to dodge it by switching gravity (once on ground... and other time mid-air! this way you do a "jump").
-
-
 
 
 ## License
