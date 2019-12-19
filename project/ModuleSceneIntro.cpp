@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include "glmath.h"
 #include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
@@ -82,21 +83,40 @@ bool ModuleSceneIntro::Start()
 	current_colors[0] = 0; current_colors[1] = 1; current_colors[2] = 1;
 
 	reference_vec.y += roof_height;
+
 	Cube* checkpoint2 = new Cube(20, 10, 0.2f);
 
 	checkpoint2->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
+
+	//checkpoint2->SetRotation(180, vec3(0, 0, 1));
+	mat3x3 aux;
+	
+	aux = GetRotFromAngleAndAxis(180, vec3(0, 0, 1)) * GetRotFromAngleAndAxis(180, vec3(0, 1, 0));
+
+	checkpoint2->transform.rotate(aux);
 
 	checkpoint2->body = App->physics->AddBody(*checkpoint2, 0);
 	checkpoint2->body->SetAsSensor(true);
 	checkpoint2->body->collision_listeners.add(App->player);
 
-	AddLinearMap(15, vec3(0, 0, -10), 15.f);
 
+	AddLinearMap(17, vec3(0, 0, -10), 17.f);
 	
 	AddCircularMap(30, vec3(45, 0, 0), 47.f, 0.1, -1, -1);
 
+	AddLinearMap(8, vec3(5, 0, 10), 30.f);
+	AddLinearMap(8, vec3(-5, 0, 5), 35.f);
+	AddLinearMap(8, vec3(5, 0, 15), 30.f);
 
+	CreateRamp(60, 3, 25, vec3(reference_vec), 15);
 
+	//Pink
+	current_colors[0] = 1; current_colors[1] = 0; current_colors[2] = 1;
+	reference_vec.y -= roof_height;
+
+	AddLinearMap(10, vec3(0, 0, 10), 14.f);
+
+	AddCircularMap(15, vec3(45, 0, 0), 30, 0.1, -1, 1);
 
 
 
