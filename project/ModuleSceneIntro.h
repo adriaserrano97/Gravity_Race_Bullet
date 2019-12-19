@@ -38,7 +38,7 @@ private:
 	//ramp = cube rotated 45 degrees. Yeah. Deal with it.
 	void CreateRamp(float X, float Y, float Z, vec3 pos, float angle, vec3 direction = vec3(1, 0, 0));
 
-	void CreateBarrier();
+	void CreateBarrier(int x, int z);
 
 public:
 	PhysBody3D* pb_chassis;
