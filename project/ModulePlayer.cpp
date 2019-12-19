@@ -170,9 +170,9 @@ void ModulePlayer::HandleInput() {
 		}
 	}
 
-	if (App->input->pad.start)
+	if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN || App->input->pad.start)
 	{
-		vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
+		vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z - 5);
 		App->scene_intro->RestartTime();
 	}
 
