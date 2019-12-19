@@ -258,7 +258,7 @@ void ModulePlayer::HandleInput() {
 			acceleration = -MAX_ACCELERATION * 0.6f;
 	}
 
-	if (App->input->pad.L1 == true)
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT || App->input->pad.L1 == true)
 	{
 		brake = BRAKE_POWER;
 	}

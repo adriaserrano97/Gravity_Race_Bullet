@@ -1,4 +1,4 @@
-# Gravity_Race_Bullet
+﻿# Gravity_Race_Bullet
 Game developed in Bullet for Physics project at CITM university 
 
 ## Credits
@@ -18,15 +18,18 @@ Currently there is no installation required, just open the .exe provided in the 
 	
 ### Debug Controls:<br>
 	F1 Show primiteves (1 in show to shoot sphere primitives)
-	M: Teleport car to last checkpoint
-	2 / R1: Invert gravity 
 	n / START: Reset the game to t0 conditions
 
 ### Player Controls: <br>
-        W / R2: Add acceleration
-        A / stick to left: Steer left
-        S / L2: Substract acceleration
-        D / stick to right: Steer right
+        W / R2: Add acceleration (graduated with pad)
+        A / stick to left: Steer left (graduated with pad)
+        S / L2: Substract acceleration (graduated with pad)
+        D / stick to right: Steer right (graduated with pad)
+	
+	Q / L1: brake
+
+	M / Y (pad): Teleport car to last checkpoint
+	2 / R1: Invert gravity 
 
 
 ## Innovation
