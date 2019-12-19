@@ -18,7 +18,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
 	InitialPosition = vec3(0, 0, 0);
-	delta_from_car = vec3(0, 5, -8);
+	delta_from_car = vec3(0, 7, -8);
 	FP_vec = vec3(0, 3, 4);
 	
 	
@@ -69,9 +69,6 @@ update_status ModuleCamera3D::Update(float dt)
 		CAR->GetTransform(&CarQuaternion);
 		vec3 car_pos = CAR->GetPositionFromQuat(CarQuaternion);
 		vec3 car_forward = CAR->GetForward();
-
-
-		
 
 		mat3x3 rotation(CarQuaternion);
 		vec3 newPos = car_pos + rotation * delta_from_car;

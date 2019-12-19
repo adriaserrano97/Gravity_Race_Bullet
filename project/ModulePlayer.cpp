@@ -245,6 +245,7 @@ void ModulePlayer::FlipVehicle() {
 		flip = true;
 	}
 	
+
 	mat4x4* player_aux = new mat4x4();
 	vehicle->GetTransform(&player_aux[0][0]);
 	mat3x3 flipcar = GetRotFromAngleAndAxis(180, vec3(0,0,1));
