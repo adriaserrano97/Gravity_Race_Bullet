@@ -88,7 +88,6 @@ bool ModuleSceneIntro::Start()
 
 	checkpoint2->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
 
-	//checkpoint2->SetRotation(180, vec3(0, 0, 1));
 	mat3x3 aux;
 	
 	aux = GetRotFromAngleAndAxis(180, vec3(0, 0, 1)) * GetRotFromAngleAndAxis(180, vec3(0, 1, 0));
@@ -163,8 +162,12 @@ update_status ModuleSceneIntro::Update(float dt)
 	App->window->SetTitle(title);
 
 	Plane p(0, 1, 0, 0);
+	float scale = 3; //change this to scale ground plane
+	p.Scale(scale, 0, scale);
 	p.axis = true;
 	p.Render();
+	
+	
 
 	for (uint n = 0; n < primitives.Count(); n++)
 	{
