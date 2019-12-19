@@ -4,7 +4,7 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 
-ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled), time(0), time_start(false), timer_sensor(nullptr)
 {
 }
 
@@ -75,16 +75,15 @@ bool ModuleSceneIntro::Start()
 	littlepad->body = App->physics->AddBody(*littlepad, 0);
 
 	
-	Cube* detector = new Cube(10, 10, 4);
+	Cube* detector = new Cube(10, 10, 0.2f);
 
 	detector->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
 	detector->SetPos(0, 5, 20);
 
 	detector->body = App->physics->AddBody(*detector, 0);
 	detector->body->SetAsSensor(true);
-	detector->body->collision_listeners.add(this);
 	detector->body->collision_listeners.add(App->player);
-
+	detector->body->collision_listeners.add(this);
 
 	return ret;
 }
@@ -100,6 +99,15 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	if (time_start)
+	{
+		time += dt;
+	}
+	
+	char title[80];
+	sprintf_s(title, "TIME SINCE STARTED: %.1f ", time);
+	App->window->SetTitle(title);
+
 	Plane p(0, 1, 0, 0);
 	p.axis = true;
 	p.Render();
@@ -110,8 +118,8 @@ update_status ModuleSceneIntro::Update(float dt)
 		{
 			primitives[n]->Update();
 		}
-	
 	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -128,6 +136,17 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2) {
 
+	if (timer_sensor == nullptr)
+	{
+		timer_sensor = body1;
+		time_start = !time_start;
+	}
+
+	if (timer_sensor != body1)
+	{
+		time_start = !time_start;
+	}
+	
 
 }
 

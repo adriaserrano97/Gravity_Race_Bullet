@@ -25,10 +25,10 @@ public:
 	vec3 Get2DForward();
 	mat3x3 GetRotation();
 
-	mat3x3 Get_Rotation_From_Quat(mat4x4 &quat) const;
-	vec3 Get_Position_From_Quat(mat4x4 &quat) const;
-	float Get_Scale_From_Quat(mat4x4 &quat) const;
-	void Copy_Only_Rotation(mat4x4 &from_this, mat4x4 &to_this);
+	mat3x3 GetRotationFromQuat(mat4x4 &quat) const;
+	vec3 GetPositionFromQuat(mat4x4 &quat) const;
+	float GetScaleFromQuat(mat4x4 &quat) const;
+	void CopyOnlyRotation(mat4x4 &from_this, mat4x4 &to_this);
 
 	void SetAsSensor(bool is_sensor);
 

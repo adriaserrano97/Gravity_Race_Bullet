@@ -121,7 +121,7 @@ mat3x3 PhysBody3D::GetRotation()
 }
 
 
-mat3x3 PhysBody3D::Get_Rotation_From_Quat(mat4x4 &quat) const
+mat3x3 PhysBody3D::GetRotationFromQuat(mat4x4 &quat) const
 {
 	mat3x3 rot;
 	rot.M[0] = quat.M[0];
@@ -138,7 +138,7 @@ mat3x3 PhysBody3D::Get_Rotation_From_Quat(mat4x4 &quat) const
 }
 
 
-vec3 PhysBody3D::Get_Position_From_Quat(mat4x4 &quat) const
+vec3 PhysBody3D::GetPositionFromQuat(mat4x4 &quat) const
 {
 	vec3 pos;
 	pos.x = quat.M[12];
@@ -148,13 +148,13 @@ vec3 PhysBody3D::Get_Position_From_Quat(mat4x4 &quat) const
 }
 
 
-float PhysBody3D::Get_Scale_From_Quat(mat4x4 &quat) const
+float PhysBody3D::GetScaleFromQuat(mat4x4 &quat) const
 {
 	return quat.M[15];
 }
 
 
-void PhysBody3D::Copy_Only_Rotation(mat4x4 &from_this, mat4x4 &to_this)
+void PhysBody3D::CopyOnlyRotation(mat4x4 &from_this, mat4x4 &to_this)
 {
 	to_this[0] = from_this[0];
 	to_this[1] = from_this[1];

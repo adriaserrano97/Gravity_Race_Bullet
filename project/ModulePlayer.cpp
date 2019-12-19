@@ -7,7 +7,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL), flip(false)
+ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL), flip(false), last_checkpoint(nullptr)
 {
 	turn = acceleration = brake = 0.0f;
 	
@@ -157,7 +157,18 @@ void ModulePlayer::HandleInput() {
 	//Debug: "M" to reset position
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
-		vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
+		if (last_checkpoint == nullptr)
+		{
+			vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
+		}
+
+		else
+		{
+			mat4x4 aux;
+			last_checkpoint->GetTransform(&aux);
+			vehicle->SetTransform(&aux);
+		}
+		
 
 	}
 
@@ -197,7 +208,6 @@ void ModulePlayer::HandleInput() {
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > MID_JOYSTICK))
 	{
-		//brake = BRAKE_POWER;
 		acceleration = -MAX_ACCELERATION;
 	}
 
@@ -240,32 +250,17 @@ void ModulePlayer::FlipVehicle() {
 	mat4x4* player_aux = new mat4x4();
 	vehicle->GetTransform(&player_aux[0][0]);
 
-	
-	if (sgn(y_adjustment) > 0) {
-		//player_aux->rotate(180, vec3(aux->getX(), aux->getY(), aux->getZ()));
-		//vehicle->SetRotation(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
-		//QuatToRotMat(GetQuatFromAngleAndAxis(180, normalize(vehicle->GetForward())));
-		//*player_aux = RotToTransform(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
+	vehicle->Copy_Only_Rotation(*rotation, *player_aux);
 
-		player_aux->rotate(180, vehicle->GetForward());
+	vec3 vehicle_pos = vehicle->Get_Position_From_Quat(*player_aux);
 
-
-	}
-	else {
-		//vehicle->SetRotation(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
-		//QuatToRotMat(GetQuatFromAngleAndAxis(180, normalize(vehicle->GetForward())));
-		//*player_aux = RotToTransform(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
-	
-		player_aux->rotate(360, vehicle->GetForward());
-	}
-	
-	player_aux->M[13] += y_adjustment;
 	vehicle->SetTransform(&player_aux[0][0]);
 
 }
 
 
 void ModulePlayer::OnCollision(PhysBody3D* body1, PhysBody3D* body2) {
-
+	
+	last_checkpoint = body1;
 	
 }

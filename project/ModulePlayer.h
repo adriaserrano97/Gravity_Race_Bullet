@@ -33,4 +33,5 @@ private:
 	float acceleration;
 	float brake;
 	bool flip;
+	PhysBody3D* last_checkpoint;
 };
