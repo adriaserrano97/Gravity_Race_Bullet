@@ -31,7 +31,7 @@ bool ModulePlayer::Start()
 	car.suspensionCompression = 0.83f;
 	car.suspensionDamping = 0.88f;
 	car.maxSuspensionTravelCm = 1000.0f;
-	car.frictionSlip = 1200;
+	car.frictionSlip = 400;
 	car.maxSuspensionForce = 6000.0f;
 
 	// Wheel properties ---------------------------------------
@@ -172,52 +172,107 @@ void ModulePlayer::HandleInput() {
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > MID_JOYSTICK))
 	{
-		acceleration = MAX_ACCELERATION;
+		if (flip)
+			acceleration = -MAX_ACCELERATION;
+		
+		else
+			acceleration = MAX_ACCELERATION;
 	}
 
 	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] < MID_JOYSTICK) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > JOYSTICK_DEAD_ZONE))
 	{
-		acceleration = MAX_ACCELERATION * 0.6;
+		if (flip)
+			acceleration = -MAX_ACCELERATION * 0.6;
+
+		else
+			acceleration = MAX_ACCELERATION * 0.6;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT || App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] < -MID_JOYSTICK)
 	{
-		if (turn < TURN_DEGREES)
+		if (flip) {
+
+			if (turn > -TURN_DEGREES)
+				turn = -TURN_DEGREES;
+		}
+
+		else {
+
+			if (turn < TURN_DEGREES)
 			turn = TURN_DEGREES;
+		}
 	}
 
 	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] < -JOYSTICK_DEAD_ZONE) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > -MID_JOYSTICK))
 	{
-		if (turn < TURN_DEGREES)
-			turn = TURN_DEGREES * 0.5;
+		if (flip) {
+
+			if (turn > -TURN_DEGREES)
+				turn = -TURN_DEGREES * 0.5;
+		}
+
+		else {
+
+			if (turn < TURN_DEGREES)
+				turn = TURN_DEGREES * 0.5;
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > MID_JOYSTICK))
 	{
-		if (turn > -TURN_DEGREES)
-			turn = -TURN_DEGREES;
+		if (flip) {
+
+			if (turn < TURN_DEGREES)
+				turn = TURN_DEGREES;
+		}
+
+		else {
+
+			if (turn > -TURN_DEGREES)
+				turn = -TURN_DEGREES;
+			
+		}
 	}
 
 	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] < MID_JOYSTICK) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_LEFTX] > JOYSTICK_DEAD_ZONE))
 	{
-		if (turn > -TURN_DEGREES)
-			turn = -TURN_DEGREES * 0.5;
+		if (flip) {
+
+			if (turn < TURN_DEGREES)
+				turn = TURN_DEGREES * 0.5;
+		}
+
+		else {
+
+			if (turn > -TURN_DEGREES)
+				turn = -TURN_DEGREES * 0.5;
+
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > MID_JOYSTICK))
 	{
-		acceleration = -MAX_ACCELERATION;
+		if (flip)
+			acceleration = MAX_ACCELERATION;
+
+		else
+			acceleration = -MAX_ACCELERATION;
 	}
 
 	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] < MID_JOYSTICK) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > JOYSTICK_DEAD_ZONE))
 	{
-		acceleration = -MAX_ACCELERATION * 0.6;
+		if (flip)
+			acceleration = MAX_ACCELERATION * 0.6f;
+
+		else
+			acceleration = -MAX_ACCELERATION * 0.6f;
 	}
 
 	if (App->input->pad.L1 == true)
 	{
 		brake = BRAKE_POWER;
 	}
+
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN || App->input->pad.R1 == true)
 	{
 		FlipVehicle();

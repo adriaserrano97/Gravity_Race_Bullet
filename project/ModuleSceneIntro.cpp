@@ -134,13 +134,24 @@ bool ModuleSceneIntro::Start()
 	//CreateBarrier();
 	CreateRamp(25, 3, 40, vec3(reference_vec), -15, vec3(1, 0, 0));
 	
-	
 	//Turquoise
 	current_colors[0] = 0; current_colors[1] = 1; current_colors[2] = 1;
 	reference_vec.y += roof_height;
 	
 
 	AddLinearMap(17, vec3(0, 0, 10), 17.f);
+
+	Cube* checkpoint4 = new Cube(20, 10, 0.2f);
+
+	checkpoint4->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
+
+	aux = GetRotFromAngleAndAxis(180, vec3(0, 0, 1));
+
+	checkpoint4->transform.rotate(aux);
+
+	checkpoint4->body = App->physics->AddBody(*checkpoint4, 0);
+	checkpoint4->body->SetAsSensor(true);
+	checkpoint4->body->collision_listeners.add(App->player);
 
 
 
