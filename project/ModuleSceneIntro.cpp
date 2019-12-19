@@ -115,7 +115,18 @@ bool ModuleSceneIntro::Start()
 
 	AddLinearMap(10, vec3(0, 0, 10), 14.f);
 
-	AddCircularMap(15, vec3(45, 0, 0), 30, 0.1, -1, 1);
+	Cube* checkpoint3 = new Cube(20, 10, 0.2f);
+
+	checkpoint3->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
+
+	checkpoint3->body = App->physics->AddBody(*checkpoint3, 0);
+	checkpoint3->body->SetAsSensor(true);
+	checkpoint3->body->collision_listeners.add(App->player);
+
+	AddCircularMap(25, vec3(45, 0, 0), 30, 0.1, -1, 1);
+
+	//AddLinearMap(4, vec3(8, 0, -10), 30.f);
+	
 
 
 
