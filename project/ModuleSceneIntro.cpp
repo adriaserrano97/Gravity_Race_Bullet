@@ -209,9 +209,14 @@ update_status ModuleSceneIntro::Update(float dt)
 	}
 	
 	char title[80];
-	sprintf_s(title, "TIME SINCE STARTED: %.1f ", time);
+	sprintf_s(title, "TIME REMAINING: %.1f", 360- time);
 	App->window->SetTitle(title);
-
+	if (360 - time < 0) {
+		char title2[80];
+		sprintf_s(title, "YOU LOST! Press N or START to try again!");
+		App->window->SetTitle(title);
+	}
+	
 	Plane p(0, 1, 0, 0);
 	float scale = 3; //change this to scale ground plane
 	p.Scale(scale, 0, scale);
