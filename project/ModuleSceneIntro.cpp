@@ -5,7 +5,7 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 
-ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled), time(0), time_start(false), timer_sensor(nullptr)
+ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled), time(0), time_start(false), timer_sensor(nullptr), win(false)
 {
 }
 
@@ -117,6 +117,45 @@ bool ModuleSceneIntro::Start()
 	checkpoint4->body->SetAsSensor(true);
 	checkpoint4->body->collision_listeners.add(App->player);
 
+	CreateRamp(60, 3, 25, vec3(reference_vec), 15);
+
+
+
+	//Pink
+	current_colors[0] = 1; current_colors[1] = 0; current_colors[2] = 1;
+
+	reference_vec.y -= roof_height;
+
+	AddLinearMap(17, vec3(0, 0, 10), 17.f);
+
+
+	AddCircularMap(40, vec3(45, 0, 0), 30, 0.1, -1, 1);
+
+	AddLinearMap(17, vec3(0, 0, -10), 17.f);
+
+
+	Cube* final = new Cube(25, 10, 0.2f);
+
+	final->SetPos(reference_vec.x, reference_vec.y, reference_vec.z);
+
+	final->body = App->physics->AddBody(*final, 0);
+	final->body->SetAsSensor(true);
+	final->body->collision_listeners.add(App->player);
+	final->body->collision_listeners.add(this);
+
+	Cube* final_signal = new Cube(5, 10, 5);
+	final_signal->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
+	final_signal->SetPos(reference_vec.x + 15, reference_vec.y, reference_vec.z);
+
+	primitives.PushBack(final_signal);
+	final_signal->body = App->physics->AddBody(*final_signal, 0);
+
+	Cube* final_signal2 = new Cube(5, 10, 5);
+	final_signal2->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
+	final_signal2->SetPos(reference_vec.x - 15, reference_vec.y, reference_vec.z);
+
+	primitives.PushBack(final_signal2);
+	final_signal2->body = App->physics->AddBody(*final_signal2, 0);
 
 
 	Cube* roof = new Cube(2500, 1, 2500);
@@ -176,6 +215,13 @@ update_status ModuleSceneIntro::Update(float dt)
 	sprintf_s(title, "TIME SINCE STARTED: %.1f ", time);
 	App->window->SetTitle(title);
 
+	if (win = true)
+	{
+		char title[80];
+		sprintf_s(title, "YOU WINNED WITH THIS TIME: %.1f ", time);
+		App->window->SetTitle(title);
+	}
+
 	Plane p(0, 1, 0, 0);
 	float scale = 3; //change this to scale ground plane
 	p.Scale(scale, 0, scale);
@@ -217,6 +263,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2) {
 	if (timer_sensor != body1)
 	{
 		time_start = !time_start;
+		win = true;
 	}
 	
 
@@ -313,16 +360,16 @@ void ModuleSceneIntro::CreateBarrier(int x, int z) {
 	int aux_h = 5; //definir la altura de la rampa
 	Cube* pillar = new Cube(15, 0.2, 0.2); //el pilar que aguanta la rampa
 	pillar->color.Set(0, 1, 0);
-	pillar->SetPos(reference_vec.x + x, 9, reference_vec.z + z); //cambiar x,z para donde quieres el bicho
+	pillar->SetPos(reference_vec.x + x, 6, reference_vec.z + z); //cambiar x,z para donde quieres el bicho
 	primitives.PushBack(pillar);
 	pillar->body = App->physics->AddBody(*pillar, 0);
 
-	Cube* ramp_pillar = new Cube(15, 10, 0.3); //la rampa en si. la z es como de larga es
+	Cube* ramp_pillar = new Cube(15, 9, 0.3); //la rampa en si. la z es como de larga es
 	ramp_pillar->color.Set(0, 1, 0);
-	ramp_pillar->SetPos(reference_vec.x, 6, 10); //esto da igual porque el hinge lo va a forzar a estar con el pilar
+	ramp_pillar->SetPos(reference_vec.x, 4, 10); //esto da igual porque el hinge lo va a forzar a estar con el pilar
 	primitives.PushBack(ramp_pillar);
 	ramp_pillar->SetRotation(180,vec3(1,0,0));
-	ramp_pillar->body = App->physics->AddBody(*ramp_pillar, 10); //este ultimo parametro es la masa de la rampa. a mas suave, mas facil de mover
+	ramp_pillar->body = App->physics->AddBody(*ramp_pillar, 100); //este ultimo parametro es la masa de la rampa. a mas suave, mas facil de mover
 	App->physics->AddConstraintHinge(*pillar->body, *ramp_pillar->body, vec3(-0.3, 0, -0.3), vec3(0, -0.2, 0), vec3(1, 0, 0), vec3(1, 0, 0), true);
 	//									1st body        2nd body    punto local del 1st body  punto local del 2nd body    eje de movimiento.			true= los bichos no colision
 	//															    donde se aplica hinge     donde se aplica hinge    estos ejes te dan una rampa.      entre ellos dos
@@ -335,5 +382,6 @@ void ModuleSceneIntro::RestartTime() {
 
 	time = 0;
 	time_start = false;
+	win = false;
 	timer_sensor = nullptr;
 }

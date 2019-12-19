@@ -178,19 +178,11 @@ void ModulePlayer::HandleInput() {
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > MID_JOYSTICK))
 	{
-		if (flip)
-			acceleration = -MAX_ACCELERATION;
-		
-		else
 			acceleration = MAX_ACCELERATION;
 	}
 
 	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] < MID_JOYSTICK) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > JOYSTICK_DEAD_ZONE))
 	{
-		if (flip)
-			acceleration = -MAX_ACCELERATION * 0.6;
-
-		else
 			acceleration = MAX_ACCELERATION * 0.6;
 	}
 
@@ -258,19 +250,11 @@ void ModulePlayer::HandleInput() {
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > MID_JOYSTICK))
 	{
-		if (flip)
-			acceleration = MAX_ACCELERATION;
-
-		else
 			acceleration = -MAX_ACCELERATION;
 	}
 
 	if ((App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] < MID_JOYSTICK) && (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > JOYSTICK_DEAD_ZONE))
 	{
-		if (flip)
-			acceleration = MAX_ACCELERATION * 0.6f;
-
-		else
 			acceleration = -MAX_ACCELERATION * 0.6f;
 	}
 

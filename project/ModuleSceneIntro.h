@@ -61,4 +61,5 @@ private:
 	double time;
 	bool time_start;
 	PhysBody3D* timer_sensor;
+	bool win;
 };
