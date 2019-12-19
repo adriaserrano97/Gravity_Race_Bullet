@@ -247,25 +247,12 @@ void ModulePlayer::FlipVehicle() {
 	
 	mat4x4* player_aux = new mat4x4();
 	vehicle->GetTransform(&player_aux[0][0]);
-
-	if (sgn(y_adjustment) > 0) {
-		//player_aux->rotate(180, vec3(aux->getX(), aux->getY(), aux->getZ()));
-		//vehicle->SetRotation(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
-		//QuatToRotMat(GetQuatFromAngleAndAxis(180, normalize(vehicle->GetForward())));
-		//*player_aux = RotToTransform(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
-		player_aux->rotate(180, vehicle->GetForward());
-	}
-	else {
-		//vehicle->SetRotation(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
-		//QuatToRotMat(GetQuatFromAngleAndAxis(180, normalize(vehicle->GetForward())));
-		//*player_aux = RotToTransform(QuatToRotMat(GetQuatFromAngleAndAxis(180, vehicle->GetForward())));
-
-		player_aux->rotate(360, vehicle->GetForward());
-	}
-
+	mat3x3 flipcar = GetRotFromAngleAndAxis(180, vec3(0,0,1));
+	mat3x3 auxrot(*player_aux);
+	auxrot = auxrot * flipcar;
+	player_aux->rotate(auxrot);
 	player_aux->M[13] += y_adjustment;
 	vehicle->SetTransform(&player_aux[0][0]);
-
 }
 
 

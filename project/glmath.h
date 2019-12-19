@@ -421,7 +421,7 @@ vec4 GetQuatFromAngleAndAxis(float angle, vec3 axis);
 class mat2x2;
 class mat3x3;
 class mat4x4;
-
+mat3x3 GetRotFromAngleAndAxis(float angle, vec3 axis);
 mat3x3 QuatToRotMat(vec4 quat);
 mat4x4 RotToTransform(mat3x3 rot);
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -499,6 +499,7 @@ public:
 	mat4x4& ortho(float left, float right, float bottom, float top, float n, float f);
 	mat4x4& perspective(float fovy, float aspect, float n, float f);
 	mat4x4& rotate(float angle, const vec3 &u);
+	mat4x4& rotate(mat3x3 rot);
 	mat4x4& scale(float x, float y, float z);
 	mat4x4& translate(float x, float y, float z);
 	mat4x4& transpose();
