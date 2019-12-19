@@ -22,6 +22,8 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+	void RestartTime();
+
 private:
 	
 	//put "number" pairs of pilars with a separation between them of "gap". The local position of each pilar is "vec3 separation" from the last pillar added. 

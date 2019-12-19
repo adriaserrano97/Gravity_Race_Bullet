@@ -174,6 +174,21 @@ bool ModuleSceneIntro::Start()
 	timer_sensor_first_checkpoint->body->collision_listeners.add(this);
 
 
+	Cube* start_signal = new Cube(5, 10, 5);
+	start_signal->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
+	start_signal->SetPos(11, 5, 20);
+
+	primitives.PushBack(start_signal);
+	start_signal->body = App->physics->AddBody(*start_signal, 0);
+
+	Cube* start_signal2 = new Cube(5, 10, 5);
+	start_signal2->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
+	start_signal2->SetPos(-11, 5, 20);
+
+	primitives.PushBack(start_signal2);
+	start_signal2->body = App->physics->AddBody(*start_signal2, 0);
+
+
 	return ret;
 }
 
@@ -352,3 +367,10 @@ void ModuleSceneIntro::CreateBarrier() {
 
 }
 
+
+void ModuleSceneIntro::RestartTime() {
+
+	time = 0;
+	time_start = false;
+	timer_sensor = nullptr;
+}

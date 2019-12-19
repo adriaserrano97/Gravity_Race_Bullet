@@ -26,7 +26,7 @@ bool ModulePlayer::Start()
 	// Car properties ----------------------------------------
 	car.chassis_size.Set(3.5, 1.5f, 5);
 	car.chassis_offset.Set(0, 1.5, 0);
-	car.mass = 400.0f;
+	car.mass = 500.0f;
 	car.suspensionStiffness = 15.88f;
 	car.suspensionCompression = 0.83f;
 	car.suspensionDamping = 0.88f;
@@ -117,7 +117,7 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
+	vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z-5);
 	return true;
 }
 
@@ -155,7 +155,7 @@ update_status ModulePlayer::Update(float dt)
 void ModulePlayer::HandleInput() {
 
 	//Debug: "M" to reset position
-	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN || App->input->pad.y)
 	{
 		if (last_checkpoint == nullptr)
 		{
@@ -168,6 +168,12 @@ void ModulePlayer::HandleInput() {
 			last_checkpoint->GetTransform(&aux);
 			vehicle->SetTransform(&aux);
 		}
+	}
+
+	if (App->input->pad.start)
+	{
+		vehicle->SetPos(App->camera->InitialPosition.x, App->camera->InitialPosition.y, App->camera->InitialPosition.z);
+		App->scene_intro->RestartTime();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > MID_JOYSTICK))
