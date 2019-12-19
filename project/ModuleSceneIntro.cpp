@@ -43,7 +43,7 @@ bool ModuleSceneIntro::Start()
 
 	reference_vec.y += roof_height;
 
-	Cube* checkpoint2 = new Cube(20, 10, 0.2f);
+	Cube* checkpoint2 = new Cube(20, 10, 2);
 
 	checkpoint2->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
 
@@ -74,7 +74,7 @@ bool ModuleSceneIntro::Start()
 
 	AddLinearMap(10, vec3(0, 0, 10), 14.f);
 
-	Cube* checkpoint3 = new Cube(20, 10, 0.2f);
+	Cube* checkpoint3 = new Cube(20, 10, 2);
 
 	checkpoint3->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
 
@@ -105,7 +105,7 @@ bool ModuleSceneIntro::Start()
 
 	AddLinearMap(17, vec3(0, 0, 10), 17.f);
 
-	Cube* checkpoint4 = new Cube(20, 10, 0.2f);
+	Cube* checkpoint4 = new Cube(20, 10, 2);
 
 	checkpoint4->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
 
@@ -134,7 +134,7 @@ bool ModuleSceneIntro::Start()
 	AddLinearMap(17, vec3(0, 0, -10), 17.f);
 
 
-	Cube* final = new Cube(25, 10, 0.2f);
+	Cube* final = new Cube(25, 10, 2);
 
 	final->SetPos(reference_vec.x, reference_vec.y, reference_vec.z);
 
@@ -166,7 +166,7 @@ bool ModuleSceneIntro::Start()
 	roof->body = App->physics->AddBody(*roof, 0);
 
 	
-	Cube* timer_sensor_first_checkpoint = new Cube(10, 10, 0.2f);
+	Cube* timer_sensor_first_checkpoint = new Cube(10, 10, 2);
 
 	timer_sensor_first_checkpoint->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
 	timer_sensor_first_checkpoint->SetPos(0, 5, 20);
@@ -215,10 +215,16 @@ update_status ModuleSceneIntro::Update(float dt)
 	sprintf_s(title, "TIME SINCE STARTED: %.1f ", time);
 	App->window->SetTitle(title);
 
-	if (win = true)
+	if (win == true)
 	{
 		char title[80];
-		sprintf_s(title, "YOU WINNED WITH THIS TIME: %.1f ", time);
+		sprintf_s(title, "YOU WON WITH THIS TIME: %.1f ", time);
+		App->window->SetTitle(title);
+	}
+
+	if (360 - time < 0) {
+		char title2[80];
+		sprintf_s(title, "YOU LOST! Press N or START to try again!");
 		App->window->SetTitle(title);
 	}
 
@@ -260,8 +266,9 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2) {
 		time_start = !time_start;
 	}
 
-	if (timer_sensor != body1)
+	if (timer_sensor != body1 && 360 - time > 0)
 	{
+		timer_sensor = body1;
 		time_start = !time_start;
 		win = true;
 	}
