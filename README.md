@@ -33,9 +33,11 @@ Currently there is no installation required, just open the .exe provided in the 
 	Check out our map generator functions! AddLinearMap & AddCircularMap
 
 ## Worthwhile considerations:
+Victory condition: reach the second pair of yellow pillars while following the track. Good luck!
+Loose condition: run out of time (keep track of it in window name).
 Follow the layout: pink on the ground and blue on the cealing. Hit all checkpoints in time to win the game! If you run out of time, you'll have to start again
 R2 / L2 add acceleration, not movement: if you've been pressing those buttons for a while, the car has enough acc to move on it's own!
-Each time you see a white ramp, go towards it: once you're in, swich gravity! this way you'll hit the checkpoint.
+Each time you see a white ramp, go towards it: once you're in, swich gravity! this way you'll hit the checkpoint without loosing momentum... saving precious time!
 
 
 ## License
