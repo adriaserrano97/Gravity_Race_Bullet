@@ -189,6 +189,26 @@ vec4 GetQuatFromAngleAndAxis(float angle, vec3 axis)
 
 }
 
+mat3x3 GetRotFromAngleAndAxis(float angle, vec3 axis)
+{
+	mat3x3 rot;
+	float a = angle / 180.0f * (float)M_PI;
+	float c = cos(a);
+	float s = sin(a);
+	float t = 1 - c;
+	float x = normalize(axis).x;
+	float y = normalize(axis).y;
+	float z = normalize(axis).z;
+	
+
+	rot.M[0] = t * x*x + c;		rot.M[3] = t * x*y - z * s;	rot.M[6] = t * x*z + y * s;
+	rot.M[1] = t * x*y + z * s;	rot.M[4] = t * y*y + c;		rot.M[7] = t * y*z - x * s;
+	rot.M[2] = t * x*z - y * s;	rot.M[5] = t * y*z + x * s;	rot.M[8] = t * z*z + c;
+
+
+	return rot;
+}
+
 mat3x3 QuatToRotMat(vec4 quat)
 {
 	mat3x3 R;
@@ -664,6 +684,23 @@ mat4x4& mat4x4::rotate(float angle, const vec3 &u)
 	M[8] = c * v.x * v.z + v.y * s;
 	M[9] = c * v.y * v.z - v.x * s;
 	M[10] = 1.0f + c * (v.z * v.z - 1.0f);
+
+	return *this;
+}
+mat4x4& mat4x4::rotate(mat3x3 rot)
+{
+
+	M[0] = rot.M[0];
+	M[1] = rot.M[1];
+	M[2] = rot.M[2];
+
+	M[4] = rot.M[3];
+	M[5] = rot.M[4];
+	M[6] = rot.M[5];
+
+	M[8] = rot.M[6];
+	M[9] = rot.M[7];
+	M[10] = rot.M[8];
 
 	return *this;
 }
