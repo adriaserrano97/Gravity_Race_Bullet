@@ -138,6 +138,26 @@ bool ModuleSceneIntro::Start()
 	timer_sensor_first_checkpoint->body->collision_listeners.add(App->player);
 	timer_sensor_first_checkpoint->body->collision_listeners.add(this);
 
+
+
+
+
+		
+		
+	int aux_h = 5; //definir la altura de la rampa
+	Cube* pillar = new Cube(10, aux_h, 0.01); //el pilar que aguanta la rampa
+	pillar->color.Set(0,1,0);
+	pillar->SetPos(0, aux_h/2, 0); //cambiar x,z para donde quieres el bicho
+	primitives.PushBack(pillar);
+	pillar->body = App->physics->AddBody(*pillar, 0);
+	Cube* ramp_pillar = new Cube(10, 0.3, 50); //la rampa en si. la z es como de larga es
+	ramp_pillar->color.Set(0, 1, 0);
+	ramp_pillar->SetPos(0, aux_h/2+0.5, 20); //esto da igual porque el hinge lo va a forzar a estar con el pilar
+	primitives.PushBack(ramp_pillar);
+	ramp_pillar->body = App->physics->AddBody(*ramp_pillar, 10); //este ultimo parametro es la masa de la rampa. a mas suave, mas facil de mover
+	App->physics->AddConstraintHinge(*pillar->body, *ramp_pillar->body,vec3(0,aux_h/2 +1,0),vec3(0,-0.3/2+0.5,3),vec3(1,0,0),vec3(1,0,0), true);
+	//									1st body        2nd body    punto local del 1st body  punto local del 2nd body    eje de movimiento.			true= los bichos no colision
+	//															    donde se aplica hinge     donde se aplica hinge    estos ejes te dan una rampa.      entre ellos dos
 	return ret;
 }
 
