@@ -145,7 +145,7 @@ update_status ModulePlayer::Update(float dt)
 
 	char title[400];
 	sprintf_s(title, "%.1f Km/h  vec forward is: %.1f x %.1f y %.1f z ", vehicle->GetKmh(), vehicle->GetForward().x, vehicle->GetForward().y, vehicle->GetForward().z);
-	App->window->SetTitle(title);
+	//App->window->SetTitle(title);
 
 
 	return UPDATE_CONTINUE;
@@ -168,8 +168,6 @@ void ModulePlayer::HandleInput() {
 			last_checkpoint->GetTransform(&aux);
 			vehicle->SetTransform(&aux);
 		}
-		
-
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || (App->input->gameController1AxisValues[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > MID_JOYSTICK))

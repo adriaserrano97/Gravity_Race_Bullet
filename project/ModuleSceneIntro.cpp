@@ -20,7 +20,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	reference_vec = vec3(0, 0, 0);
-	float roof_height = 8;
+	float roof_height = 12;
 
 	
 	//Here goes the map: absolute yeeet my boi
@@ -66,24 +66,58 @@ bool ModuleSceneIntro::Start()
 	//END MAP
 	*/
 
-	//littlepad = the roof. Long story here.
-	Cube* littlepad = new Cube(2500, 1, 2500);
-	littlepad->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
-	littlepad->SetPos(0, 10, 0);	
+	//START MAP
 
-	primitives.PushBack(littlepad);
-	littlepad->body = App->physics->AddBody(*littlepad, 0);
+		//Pink
+	current_colors[0] = 1; current_colors[1] = 0; current_colors[2] = 1;
+	AddLinearMap(5, vec3(0, 0, 10), 10.f);
+	AddCircularMap(30, vec3(85, 0, 0), 20.f, 0.1);
+	AddLinearMap(15, vec3(0, 0, -10), 10.f);
+	AddCircularMap(30, vec3(45, 0, 0), 20.f, 0.1, -1, -1);
+	AddCircularMap(30, vec3(45, 0, 0), 20.f, 0.1, -1, 1);
+	AddLinearMap(5, vec3(0, 0, -10), 10.f);
+	CreateRamp(25, 3, 25, vec3(reference_vec), 25);
+
+	//Turquoise
+	current_colors[0] = 0; current_colors[1] = 1; current_colors[2] = 1;
+
+	reference_vec.y += roof_height;
+	Cube* checkpoint2 = new Cube(20, 10, 0.2f);
+
+	checkpoint2->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
+
+	checkpoint2->body = App->physics->AddBody(*checkpoint2, 0);
+	checkpoint2->body->SetAsSensor(true);
+	checkpoint2->body->collision_listeners.add(App->player);
+
+	AddLinearMap(15, vec3(0, 0, -10), 15.f);
 
 	
-	Cube* detector = new Cube(10, 10, 0.2f);
+	AddCircularMap(30, vec3(45, 0, 0), 47.f, 0.1, -1, -1);
 
-	detector->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
-	detector->SetPos(0, 5, 20);
 
-	detector->body = App->physics->AddBody(*detector, 0);
-	detector->body->SetAsSensor(true);
-	detector->body->collision_listeners.add(App->player);
-	detector->body->collision_listeners.add(this);
+
+
+
+
+
+	Cube* roof = new Cube(2500, 1, 2500);
+	roof->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
+	roof->SetPos(0, 15, 0);	
+
+	primitives.PushBack(roof);
+	roof->body = App->physics->AddBody(*roof, 0);
+
+	
+	Cube* timer_sensor_first_checkpoint = new Cube(10, 10, 0.2f);
+
+	timer_sensor_first_checkpoint->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
+	timer_sensor_first_checkpoint->SetPos(0, 5, 20);
+
+	timer_sensor_first_checkpoint->body = App->physics->AddBody(*timer_sensor_first_checkpoint, 0);
+	timer_sensor_first_checkpoint->body->SetAsSensor(true);
+	timer_sensor_first_checkpoint->body->collision_listeners.add(App->player);
+	timer_sensor_first_checkpoint->body->collision_listeners.add(this);
 
 	return ret;
 }
