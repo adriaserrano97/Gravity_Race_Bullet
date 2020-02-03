@@ -43,19 +43,19 @@ bool ModuleSceneIntro::Start()
 
 	reference_vec.y += roof_height;
 
-	Cube* checkpoint2 = new Cube(20, 10, 2);
+	Cube checkpoint2(20, 10, 2);
 
-	checkpoint2->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
+	checkpoint2.SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
 
 	mat3x3 aux;
 	
 	aux = GetRotFromAngleAndAxis(180, vec3(0, 0, 1)) * GetRotFromAngleAndAxis(180, vec3(0, 1, 0));
 
-	checkpoint2->transform.rotate(aux);
+	checkpoint2.transform.rotate(aux);
 
-	checkpoint2->body = App->physics->AddBody(*checkpoint2, 0);
-	checkpoint2->body->SetAsSensor(true);
-	checkpoint2->body->collision_listeners.add(App->player);
+	checkpoint2.body = App->physics->AddBody(checkpoint2, 0);
+	checkpoint2.body->SetAsSensor(true);
+	checkpoint2.body->collision_listeners.add(App->player);
 
 
 	AddLinearMap(17, vec3(0, 0, -10), 17.f);
@@ -74,13 +74,13 @@ bool ModuleSceneIntro::Start()
 
 	AddLinearMap(10, vec3(0, 0, 10), 14.f);
 
-	Cube* checkpoint3 = new Cube(20, 10, 2);
+	Cube checkpoint3(20, 10, 2);
 
-	checkpoint3->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
+	checkpoint3.SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
 
-	checkpoint3->body = App->physics->AddBody(*checkpoint3, 0);
-	checkpoint3->body->SetAsSensor(true);
-	checkpoint3->body->collision_listeners.add(App->player);
+	checkpoint3.body = App->physics->AddBody(checkpoint3, 0);
+	checkpoint3.body->SetAsSensor(true);
+	checkpoint3.body->collision_listeners.add(App->player);
 
 	AddCircularMap(30, vec3(45, 0, 0), 30, 0.1, -1, 1);
 	
@@ -105,17 +105,17 @@ bool ModuleSceneIntro::Start()
 
 	AddLinearMap(17, vec3(0, 0, 10), 17.f);
 
-	Cube* checkpoint4 = new Cube(20, 10, 2);
+	Cube checkpoint4(20, 10, 2);
 
-	checkpoint4->SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
+	checkpoint4.SetPos(reference_vec.x, reference_vec.y, reference_vec.z - 20);
 
 	aux = GetRotFromAngleAndAxis(180, vec3(0, 0, 1));
 
-	checkpoint4->transform.rotate(aux);
+	checkpoint4.transform.rotate(aux);
 
-	checkpoint4->body = App->physics->AddBody(*checkpoint4, 0);
-	checkpoint4->body->SetAsSensor(true);
-	checkpoint4->body->collision_listeners.add(App->player);
+	checkpoint4.body = App->physics->AddBody(checkpoint4, 0);
+	checkpoint4.body->SetAsSensor(true);
+	checkpoint4.body->collision_listeners.add(App->player);
 
 	CreateRamp(60, 3, 25, vec3(reference_vec), 15);
 
@@ -134,14 +134,14 @@ bool ModuleSceneIntro::Start()
 	AddLinearMap(17, vec3(0, 0, -10), 17.f);
 
 
-	Cube* final = new Cube(25, 10, 2);
+	Cube final(25, 10, 2);
 
-	final->SetPos(reference_vec.x, reference_vec.y, reference_vec.z);
+	final.SetPos(reference_vec.x, reference_vec.y, reference_vec.z);
 
-	final->body = App->physics->AddBody(*final, 0);
-	final->body->SetAsSensor(true);
-	final->body->collision_listeners.add(App->player);
-	final->body->collision_listeners.add(this);
+	final.body = App->physics->AddBody(final, 0);
+	final.body->SetAsSensor(true);
+	final.body->collision_listeners.add(App->player);
+	final.body->collision_listeners.add(this);
 
 	Cube* final_signal = new Cube(5, 10, 5);
 	final_signal->color.Set(247.f / 255.f, 240.f / 255.f, 62.f / 255.f);
@@ -199,6 +199,15 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
+
+	for (uint n = 0; n < primitives.Count(); n++)
+	{
+		if (primitives[n]->body != nullptr)
+		{
+			delete primitives[n];
+			primitives[n] = nullptr;
+		}
+	}
 
 	return true;
 }
@@ -304,15 +313,7 @@ void ModuleSceneIntro::AddLinearMap(int number, vec3 separation, float gap)
 
 void ModuleSceneIntro::AddCircularMap(int number, vec3 origin_of_rotation, float gap, float density, int sgn_x, int sgn_z)
 {
-/*
 
-For a circle with origin (j, k) and radius r:
-
-x(t) = r cos(t) + j
-y(t) = r sin(t) + k
-
-where you need to run this equation for t taking values within the range from 0 to 360
-*/
 
 	Cube* pilar;
 	

@@ -167,7 +167,7 @@ bool ModulePhysics3D::CleanUp()
 	constraints.clear();
 
 	for(p2List_item<btDefaultMotionState*>* item = motions.getFirst(); item; item = item->next)
-		delete item->data;
+		delete item->data;	
 
 	motions.clear();
 
